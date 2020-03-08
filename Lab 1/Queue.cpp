@@ -4,34 +4,49 @@
 
 using namespace std;
 
-
 Queue::Queue() {
-	//TODO - Implementation
+	head = 0;
+	tail = -1;
+	capacity = 10000;
+	arr = new TElem[capacity];
 }
-
 
 void Queue::push(TElem elem) {
-	//TODO - Implementation
+	if ((tail + 1) % capacity == head && tail != -1) {
+		// the queue is full, we need to double its capacity
+		TElem *newArr = new TElem[capacity * 2];
+		for (int i = 0; i < capacity; i++) {
+			newArr[i] = arr[i];
+		}
+		delete arr;
+		arr = newArr;
+		capacity *= 2;
+	}
+	tail++;
+	arr[tail % capacity] = elem;
 }
 
-
 TElem Queue::top() const {
-	//TODO - Implementation
-	return NULL_TELEM;
+	if (isEmpty()) {
+		throw exception("empty queue");
+	}
+	return arr[head % capacity];
 }
 
 TElem Queue::pop() {
-	//TODO - Implementation
-	return NULL_TELEM;
+	if (isEmpty()) {
+		throw exception("empty queue");
+	}
+	TElem topElement = top();
+	head++;
+	return topElement;
 }
 
 bool Queue::isEmpty() const {
-	//TODO - Implementation
-	return false;
+	return (head == tail + 1);
 }
 
-
 Queue::~Queue() {
-	//TODO - Implementation
+	delete arr;
 }
 

@@ -11,5 +11,6 @@ int main() {
 	testAllExtended();
 
 	cout << "Test end" << endl;
-
+	
+	return 0;
 }
