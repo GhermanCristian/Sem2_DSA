@@ -50,3 +50,36 @@ Queue::~Queue() {
 	delete arr;
 }
 
+Queue::Queue(const Queue& newQueue) {
+	this->tail = newQueue.tail;
+	this->head = newQueue.head;
+	this->capacity = newQueue.capacity;
+	
+	// a separated copy of the array
+	TElem* newArr = new TElem[newQueue.capacity];
+	delete this->arr;
+	for (int i = 0; i < this->capacity; i++) {
+		newArr[i] = newQueue.arr[i];
+	}
+	this->arr = newArr;
+	cout << "constructor\n";
+}
+
+Queue& Queue::operator = (const Queue& newQueue) {
+	if (this != &newQueue) {
+		this->tail = newQueue.tail;
+		this->head = newQueue.head;
+		this->capacity = newQueue.capacity;
+
+		TElem* newArr = new TElem[newQueue.capacity];
+		delete this->arr;
+		for (int i = 0; i < this->capacity; i++) {
+			newArr[i] = newQueue.arr[i];
+		}
+		this->arr = newArr;
+		cout << "operator\n";
+	}
+	
+	return *this;
+}
+

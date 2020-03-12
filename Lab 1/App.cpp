@@ -7,6 +7,10 @@ using namespace std;
 
 int main() {
 
+	Queue q1;
+	Queue q2;
+	q2 = q1;
+
 	testAll();
 	testAllExtended();
 

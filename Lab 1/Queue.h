@@ -94,4 +94,14 @@ public:
 		Throws:
 			- None
 	*/
+
+	Queue(const Queue& newQueue);
+	/*
+		Copy constructor
+	*/
+
+	Queue& operator = (const Queue& newQueue);
+	/*
+		Assignment operator
+	*/
 };
