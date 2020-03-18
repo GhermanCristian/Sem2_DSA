@@ -62,7 +62,6 @@ Queue::Queue(const Queue& newQueue) {
 		newArr[i] = newQueue.arr[i];
 	}
 	this->arr = newArr;
-	cout << "constructor\n";
 }
 
 Queue& Queue::operator = (const Queue& newQueue) {
@@ -77,7 +76,6 @@ Queue& Queue::operator = (const Queue& newQueue) {
 			newArr[i] = newQueue.arr[i];
 		}
 		this->arr = newArr;
-		cout << "operator\n";
 	}
 	
 	return *this;

@@ -9,10 +9,10 @@ typedef int TElem;
 class Queue
 {
 private:
-	int head;
-	int tail;
-	int capacity;
-	TElem *arr;
+	int head; // position in the array of the head of the queue
+	int tail; // position in the array of the tail of the queue
+	int capacity; // current capacity of the queue
+	TElem *arr; // the array which will hold the elements of the queue
 
 public:
 	Queue();
@@ -36,7 +36,8 @@ public:
 		Input:
 			- e = TElem, which will be added to the queue
 		Output:
-			- None
+			- An element is added to the end of the queue
+			- The array is resized if the number of elements exceeds its capacity
 		Throws:
 			- None
 	*/
@@ -98,10 +99,26 @@ public:
 	Queue(const Queue& newQueue);
 	/*
 		Copy constructor
+		Complexity:
+			- O(n), n = capacity of newQueue
+		Input:
+			- newQueue = object of type Queue, whose content will be copied to the current Queue object
+		Output:
+			- The content of newQueue is copied to the current Queue
+		Throws:
+			- None
 	*/
 
 	Queue& operator = (const Queue& newQueue);
 	/*
 		Assignment operator
+		Complexity:
+			-
+		Input:
+			- newQueue = object of type Queue, whose content will be copied to the current Queue object
+		Output:
+			- A new object of type Queue, with the same properties as newQueue
+		Throws:
+			- None
 	*/
 };
