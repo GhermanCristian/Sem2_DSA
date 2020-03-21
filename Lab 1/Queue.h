@@ -23,7 +23,7 @@ public:
 		Input:
 			- None
 		Output:
-			- Creates an object of type Queue
+			- Creates a new, empty, object of type Queue
 		Throws:
 			- None
 	*/
@@ -113,7 +113,7 @@ public:
 	/*
 		Assignment operator
 		Complexity:
-			-
+			- O(n), n = capacity of newQueue
 		Input:
 			- newQueue = object of type Queue, whose content will be copied to the current Queue object
 		Output:

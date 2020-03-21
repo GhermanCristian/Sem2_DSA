@@ -18,7 +18,7 @@ void Queue::push(TElem elem) {
 		for (int i = 0; i < capacity; i++) {
 			newArr[i] = arr[i];
 		}
-		delete arr;
+		delete[] arr;
 		arr = newArr;
 		capacity *= 2;
 	}
@@ -47,7 +47,7 @@ bool Queue::isEmpty() const {
 }
 
 Queue::~Queue() {
-	delete arr;
+	delete[] arr;
 }
 
 Queue::Queue(const Queue& newQueue) {
@@ -57,7 +57,7 @@ Queue::Queue(const Queue& newQueue) {
 	
 	// a separated copy of the array
 	TElem* newArr = new TElem[newQueue.capacity];
-	delete this->arr;
+	delete[] this->arr;
 	for (int i = 0; i < this->capacity; i++) {
 		newArr[i] = newQueue.arr[i];
 	}
@@ -71,7 +71,7 @@ Queue& Queue::operator = (const Queue& newQueue) {
 		this->capacity = newQueue.capacity;
 
 		TElem* newArr = new TElem[newQueue.capacity];
-		delete this->arr;
+		delete[] this->arr;
 		for (int i = 0; i < this->capacity; i++) {
 			newArr[i] = newQueue.arr[i];
 		}
