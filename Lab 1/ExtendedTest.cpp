@@ -1,7 +1,6 @@
 #include <assert.h>
 #include "Queue.h"
 #include "ExtendedTest.h"
-#include <vector>
 #include <exception>
 #include <iostream>
 
@@ -75,7 +74,6 @@ void testPop() {
 	}
 	assert(q.isEmpty() == false);
 
-	
 	for (int i = 0; i < 10; i++) {
 		assert(q.pop() == i);
 	}

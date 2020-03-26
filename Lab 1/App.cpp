@@ -14,9 +14,7 @@ int main() {
 	testAllExtended();
 
 	cout << "Test end" << endl;
-	if (_CrtDumpMemoryLeaks()) {
-		cout << "leaks\n";
-	}
+	_CrtDumpMemoryLeaks();
 	
 	return 0;
 }

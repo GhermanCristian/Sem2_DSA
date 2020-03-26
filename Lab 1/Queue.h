@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 using namespace std;
 
 //DO NOT CHANGE THIS PART
@@ -13,6 +12,17 @@ private:
 	int tail; // position in the array of the tail of the queue
 	int capacity; // current capacity of the queue
 	TElem *arr; // the array which will hold the elements of the queue
+
+	void copyInformation(const Queue& originalQueue);
+	/*
+		Copies the content of arr from a given queue to the current one
+		Complexity:
+			- O(n), n = current capacity of the queue
+		Input:
+			- A queue from which the information will be copied
+		Output:
+			- The content of the original queue is copied to the current one
+	*/
 
 public:
 	Queue();
