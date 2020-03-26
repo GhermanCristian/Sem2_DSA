@@ -36,8 +36,6 @@ void SortedBag::insertBeforeNode(Node* rightNode, TComp info){
 }
 
 Node* SortedBag::getNodeWithInfo(TComp info) const {
-	// this will return either the node with the given info (if it exists), or the first node whose info is not in
-	// relation with the given info (basically "the next node" after the one with the same info, if it existed)
 	for (Node* listIterator = head; listIterator != nullptr; listIterator = listIterator->nextNode) {
 		if (currentRelation(listIterator->info, info) == false or listIterator->info == info) {
 			return listIterator;
@@ -110,7 +108,7 @@ bool SortedBag::removeFromListWithOneElement(TComp e) {
 	return false;
 }
 
-void SortedBag::deleteElement(Node* elementPosition){
+void SortedBag::deleteNode(Node* elementPosition){
 	Node* nextNode = elementPosition->nextNode;
 	Node* prevNode = elementPosition->prevNode;
 
@@ -155,7 +153,7 @@ bool SortedBag::remove(TComp e) {
 	elementPosition->nrOfOccurences--;
 
 	if (elementPosition->nrOfOccurences == 0) {
-		deleteElement(elementPosition);
+		deleteNode(elementPosition);
 	}
 
 	return true;

@@ -20,49 +20,206 @@ class SortedBag {
 	friend class SortedBagIterator;
 
 	private:
-		Node* head;
-		Node* tail;
+		Node* head; // first node in the list
+		Node* tail; // last node in the list
 		Relation currentRelation;
 		int listLength; // how many nodes in the list (<=> how many different elements)
 		int nrOfElements; // total elements (including duplicates)
 		
 		void insertBeforeNode(Node* rightNode, TComp info);
-		Node* getNodeWithInfo(TComp info) const;
+		/*
+			Inserts a new node before a given node
+			Complexity:
+				- O(1)
+			Input:
+				- The node before we need to insert (which can be nullptr, signifying that we append to the list)
+				- The information of the new node
+			Output:
+				- The new node is added to the list at the given position
+		*/
+
+		Node* getNodeWithInfo(TComp info) const;		
+		/*
+			Determines the node which contains some information, or the one which would have been right after it (if
+			it doesn't exist)
+			Complexity:
+				- O(n), n = current length of the list
+			Input:
+				- The information of the node we search for
+			Output:
+				- The required node (can be nullptr if we don't find anything)
+		*/
+
 		bool foundExactElement(Node* possiblePosition, TComp info) const;
+		/*
+			Determines if a given node contains exactly the information that we want
+			Complexity:
+				- O(1)
+			Input:
+				- The node which might hold the information that we want
+				- The information that we want
+			Output:
+				- True, if the information coincides
+				- False, otherwise
+		*/
+
 		void independentCopyOfList(const SortedBag& originalSortedBag);
+		/*
+			Copies, one-by-one, all the elements from the list of another SortedBag to the current one
+			Complexity:
+				- O(n), n = current length of the list
+			Input:
+				- The SortedBag we copy from
+			Output:
+				- The content of that SortedBag is independently copied to the current one (new Nodes, but the same
+				information)
+		*/
+
 		bool removeFromListWithOneElement(TComp e);
-		void deleteElement(Node* elementPosition);
+		/*
+			Removes an instance of an element from a one-element-list
+			Complexity:
+				- O(1)
+			Input:
+				- The information of the element that we want to remove
+			Output:
+				- True, if the element existed, in which case the instance of the element is removed
+				- False, otherwise
+		*/
+
+		void deleteNode(Node* elementPosition);
+		/*
+			Deletes a given Node and ensures the list isn't broken
+			Complexity:
+				- O(1)
+			Input:
+				- The node that we want to delete
+			Output:
+				- The node is deleted, the previous and next nodes are linked (if possible)
+		*/
 
 	public:
-		//constructor
 		SortedBag(Relation r);
+		/*
+			Constructor
+			Complexity:
+				- O(1)
+			Input:
+				- The relation between the elements
+			Output:
+				- A new, empty object of type SortedBag is constructed
+		*/
 
-		//adds an element to the sorted bag
 		void add(TComp e);
+		/*
+			Adds an element to the SortedBag
+			Complexity:
+				- O(n), n = current length of the list of elements from the SortedBag
+			Input:
+				- The element that we want to add
+			Output:
+				- The element is added to the list
+		*/
 
-		//removes one occurence of an element from a sorted bag
-		//returns true if an eleent was removed, false otherwise (if e was not part of the sorted bag)
 		bool remove(TComp e);
+		/*
+			Removes an instance of an element from the SortedBag
+			Complexity:
+				- O(n), n = current length of the list of elements from the SortedBag
+			Input:
+				- The element that we want to remove
+			Output:
+				- Returns true, if the element existed, in which case it is removed from the list
+				- False, otherwise
+		*/
 
-		//checks if an element appears in the sorted bag
 		bool search(TComp e) const;
+		/*
+			Searches for an element in the SortedBag
+			Complexity:
+				- O(n), n = current length of the list of elements from the SortedBag
+			Input:
+				- The element that we search for
+			Output:
+				- Returns true, if the element exists
+				- False, otherwise
+		*/
 
-		//returns the number of occurrences for an element in the sorted bag
 		int nrOccurrences(TComp e) const;
+		/*
+			Determines the number of occurences of an element in the SortedBag
+			Complexity:
+				- O(n), n = current length of the list of elements from the SortedBag
+			Input:
+				- The element whose number of occurences we want to determine
+			Output:
+				- Returns the number of occurences of the given element (or 0, if it doesn't exist)
+		*/
 
-		//returns the number of elements from the sorted bag
 		int size() const;
+		/*
+			Determines the size of the SortedBag
+			Complexity:
+				- O(1)
+			Input:
+				- None
+			Output:
+				- Returns the size of the SortedBag
+		*/
 
-		//returns an iterator for this sorted bag
 		SortedBagIterator iterator() const;
+		/*
+			Returns an iterator of the SortedBag
+			Complexity:
+				- O(1)
+			Input:
+				- None
+			Output:
+				- Returns an iterator of the SortedBag
+		*/
 
-		//checks if the sorted bag is empty
 		bool isEmpty() const;
+		/*
+			Checks if the SortedBag is empty
+			Complexity:
+				- O(1)
+			Input:
+				- None
+			Output:
+				- Returns true, if the SortedBag is empty
+				- False, otherwise
+		*/
 
 		SortedBag(const SortedBag& originalSortedBag);
+		/*
+			Copy constructor
+			Complexity:
+				- O(n), n = current length of the list of elements from the SortedBag
+			Input:
+				- The SortedBag we copy from
+			Output:
+				- The content of that SortedBag is copied to the current one
+		*/
 
 		SortedBag& operator = (const SortedBag& originalSortedBag);
+		/*
+			Assignment operator
+			Complexity:
+				- O(n), n = current length of the list of elements from the SortedBag
+			Input:
+				- The SortedBag we copy from
+			Output:
+				- The content of that SortedBag is copied to a new one, which is returned
+		*/
 
-		//destructor
 		~SortedBag();
+		/*
+			Destructor
+			Complexity:
+				- O(n), n = current length of the list of elements from the SortedBag
+			Input:
+				- None
+			Output:
+				- Destroys the current SortedBag
+		*/
 };
