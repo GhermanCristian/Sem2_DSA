@@ -6,7 +6,7 @@ SortedBag::SortedBag(Relation r) {
 	head = nullptr;
 	tail = nullptr;
 	currentRelation = r;
-	listLength = 0; // this may not be required, I might not need the list length when checking if the list is empty
+	listLength = 0;
 	nrOfElements = 0;
 }
 
@@ -51,6 +51,25 @@ bool SortedBag::foundExactElement(Node* possiblePosition, TComp info) const {
 	return (possiblePosition != nullptr and possiblePosition->info == info);
 }
 
+void SortedBag::independentCopyOfList(const SortedBag& originalSortedBag){
+	for (Node* listIterator = originalSortedBag.head; listIterator != nullptr; listIterator = listIterator->nextNode) {
+		Node* newNode = new Node;
+		newNode->info = listIterator->info;
+		newNode->nrOfOccurences = listIterator->nrOfOccurences;
+		newNode->nextNode = newNode->prevNode = nullptr;
+
+		if (listIterator == originalSortedBag.head) {
+			this->head = this->tail = newNode;
+		}
+		else {
+			this->tail->nextNode = newNode;
+			newNode->prevNode = this->tail;
+			newNode->nextNode = nullptr; // to be more clear, although it's pointless
+			this->tail = newNode;
+		}
+	}
+}
+
 void SortedBag::add(TComp e) {
 	nrOfElements++;
 	if (listLength == 0) {
@@ -77,25 +96,53 @@ void SortedBag::add(TComp e) {
 	}
 }
 
+bool SortedBag::removeFromListWithOneElement(TComp e) {
+	if (head->info == e && head->nrOfOccurences > 0) {
+		nrOfElements--;
+		head->nrOfOccurences--;
+		if (head->nrOfOccurences == 0) {
+			listLength--;
+			delete head;
+			head = tail = nullptr;
+		}
+		return true;
+	}
+	return false;
+}
+
+void SortedBag::deleteElement(Node* elementPosition){
+	Node* nextNode = elementPosition->nextNode;
+	Node* prevNode = elementPosition->prevNode;
+
+	if (nextNode == nullptr) { // last element
+		prevNode->nextNode = nullptr;
+		tail = prevNode;
+	}
+
+	else if (prevNode == nullptr) { // first element
+		nextNode->prevNode = nullptr;
+		head = nextNode;
+	}
+
+	else {
+		prevNode->nextNode = nextNode;
+		nextNode->prevNode = prevNode;
+	}
+
+	delete elementPosition;
+	listLength--;
+}
+
 bool SortedBag::remove(TComp e) {
 	if (listLength == 0) {
 		return false;
 	}
 
 	if (listLength == 1) {
-		if (head->info == e && head->nrOfOccurences > 0) {
-			nrOfElements--;
-			head->nrOfOccurences--;
-			if (head->nrOfOccurences == 0) {
-				listLength--;
-				delete head;
-				head = tail = nullptr;
-			}
-			return true;
-		}
-		return false;
+		return removeFromListWithOneElement(e);
 	}
 
+	// 2 or more elements
 	Node* elementPosition = getNodeWithInfo(e);
 	if (foundExactElement(elementPosition, e) == false) {
 		return false; // element does not exist
@@ -108,26 +155,7 @@ bool SortedBag::remove(TComp e) {
 	elementPosition->nrOfOccurences--;
 
 	if (elementPosition->nrOfOccurences == 0) {
-		Node* nextNode = elementPosition->nextNode;
-		Node* prevNode = elementPosition->prevNode;
-
-		if (nextNode == nullptr) { // last element
-			prevNode->nextNode = nullptr;
-			tail = prevNode;
-		}
-
-		else if (prevNode == nullptr) { // first element
-			nextNode->prevNode = nullptr;
-			head = nextNode;
-		}
-
-		else {
-			prevNode->nextNode = nextNode;
-			nextNode->prevNode = prevNode;
-		}
-
-		delete elementPosition;
-		listLength--;
+		deleteElement(elementPosition);
 	}
 
 	return true;
@@ -152,6 +180,25 @@ int SortedBag::size() const {
 
 bool SortedBag::isEmpty() const {
 	return nrOfElements == 0;
+}
+
+SortedBag::SortedBag(const SortedBag& originalSortedBag) {
+	this->currentRelation = originalSortedBag.currentRelation;
+	this->listLength = originalSortedBag.listLength;
+	this->nrOfElements = originalSortedBag.nrOfElements;
+	this->head = this->tail = nullptr;
+	independentCopyOfList(originalSortedBag);
+}
+
+SortedBag& SortedBag::operator = (const SortedBag& originalSortedBag){
+	if (this != &originalSortedBag) {
+		this->currentRelation = originalSortedBag.currentRelation;
+		this->listLength = originalSortedBag.listLength;
+		this->nrOfElements = originalSortedBag.nrOfElements;
+		this->head = this->tail = nullptr;
+		independentCopyOfList(originalSortedBag);
+	}
+	return (*this);
 }
 
 SortedBagIterator SortedBag::iterator() const {

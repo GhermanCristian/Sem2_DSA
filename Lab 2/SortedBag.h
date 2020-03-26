@@ -26,10 +26,12 @@ class SortedBag {
 		int listLength; // how many nodes in the list (<=> how many different elements)
 		int nrOfElements; // total elements (including duplicates)
 		
-
 		void insertBeforeNode(Node* rightNode, TComp info);
 		Node* getNodeWithInfo(TComp info) const;
 		bool foundExactElement(Node* possiblePosition, TComp info) const;
+		void independentCopyOfList(const SortedBag& originalSortedBag);
+		bool removeFromListWithOneElement(TComp e);
+		void deleteElement(Node* elementPosition);
 
 	public:
 		//constructor
@@ -56,6 +58,10 @@ class SortedBag {
 
 		//checks if the sorted bag is empty
 		bool isEmpty() const;
+
+		SortedBag(const SortedBag& originalSortedBag);
+
+		SortedBag& operator = (const SortedBag& originalSortedBag);
 
 		//destructor
 		~SortedBag();
