@@ -9,10 +9,6 @@
 
 using namespace std;
 
-bool relation5(TComp r1, TComp r2) {
-	return r1 <= r2;
-}
-
 int main() {
 	testAll();
 	testAllExtended();
