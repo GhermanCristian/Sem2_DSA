@@ -10,25 +10,30 @@ SortedBagIterator::SortedBagIterator(const SortedBag& b) : bag(b) {
 
 TComp SortedBagIterator::getCurrent() {
 	if (valid()) {
-		;
+		return currentNode->info;
 	}
-	return NULL_TCOMP;
+	throw exception("Invalid position");
 }
 
 bool SortedBagIterator::valid() {
-	return (position < bag.listLength);
+	return (currentElement < bag.listLength and currentFrequency < currentNode->nrOfOccurences);
 }
 
 void SortedBagIterator::next() {
-	if (valid() == false) {
-		first();
+	if (!valid()) {
+		throw exception("Invalid position");
 	}
-	else {
-		position++;
+	currentFrequency++;
+	if (currentFrequency == currentNode->nrOfOccurences) {
+		currentFrequency = 0;
+		currentElement++;
+		currentNode = currentNode->nextNode;
 	}
 }
 
 void SortedBagIterator::first() {
-	position = 0;
+	currentElement = 0;
+	currentFrequency = 0;
+	currentNode = bag.head;
 }
 

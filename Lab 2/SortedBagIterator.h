@@ -7,16 +7,18 @@ class SortedBagIterator
 {
 	friend class SortedBag;
 
-private:
-	const SortedBag& bag;
-	int position;
+	private:
+		int currentFrequency; // frequency of the current element
+		int currentElement; // current element in the list
+		Node* currentNode;
 
-	SortedBagIterator(const SortedBag& b);
+		const SortedBag& bag;
+		SortedBagIterator(const SortedBag& b);
 
-public:
-	TComp getCurrent();
-	bool valid();
-	void next();
-	void first();
+	public:
+		TComp getCurrent();
+		bool valid();
+		void next();
+		void first();
 };
 

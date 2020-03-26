@@ -23,12 +23,13 @@ class SortedBag {
 		Node* head;
 		Node* tail;
 		Relation currentRelation;
-		int listLength;
-		int nrOfElements;
+		int listLength; // how many nodes in the list (<=> how many different elements)
+		int nrOfElements; // total elements (including duplicates)
+		
 
 		void insertBeforeNode(Node* rightNode, TComp info);
 		Node* getNodeWithInfo(TComp info) const;
-		Node* getNodeAfterInfo(TComp info) const;
+		bool foundExactElement(Node* possiblePosition, TComp info) const;
 
 	public:
 		//constructor

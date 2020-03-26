@@ -2,6 +2,7 @@
 #include "SortedBag.h"
 #include "SortedBagIterator.h"
 #include <assert.h>
+#include <iostream>
 
 bool relation1(TComp e1, TComp e2) {
 	return e1 <= e2;
@@ -34,6 +35,5 @@ void testAll() {
 	assert(it.valid() == false);
 	it.first();
 	assert(it.valid() == true);
-
 }
 

@@ -16,7 +16,7 @@ bool relation5(TComp r1, TComp r2) {
 int main() {
 	testAll();
 	testAllExtended();
-	
+
 	cout << "Test over" << endl;
 
 	_CrtDumpMemoryLeaks();

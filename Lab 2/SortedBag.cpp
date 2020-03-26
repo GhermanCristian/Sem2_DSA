@@ -36,11 +36,10 @@ void SortedBag::insertBeforeNode(Node* rightNode, TComp info){
 }
 
 Node* SortedBag::getNodeWithInfo(TComp info) const {
-	Node* listIterator = new Node;
-	listIterator = head;
-
-	for (; listIterator != nullptr; listIterator = listIterator->nextNode) {
-		if (listIterator->info == info) {
+	// this will return either the node with the given info (if it exists), or the first node whose info is not in
+	// relation with the given info (basically "the next node" after the one with the same info, if it existed)
+	for (Node* listIterator = head; listIterator != nullptr; listIterator = listIterator->nextNode) {
+		if (currentRelation(listIterator->info, info) == false or listIterator->info == info) {
 			return listIterator;
 		}
 	}
@@ -48,17 +47,8 @@ Node* SortedBag::getNodeWithInfo(TComp info) const {
 	return nullptr;
 }
 
-Node* SortedBag::getNodeAfterInfo(TComp info) const {
-	Node* listIterator = new Node;
-	listIterator = head;
-
-	for (; listIterator != nullptr; listIterator = listIterator->nextNode) {
-		if (currentRelation(listIterator->info, info) == false) {
-			return listIterator;
-		}
-	}
-
-	return nullptr;
+bool SortedBag::foundExactElement(Node* possiblePosition, TComp info) const {
+	return (possiblePosition != nullptr and possiblePosition->info == info);
 }
 
 void SortedBag::add(TComp e) {
@@ -78,11 +68,10 @@ void SortedBag::add(TComp e) {
 	Node* positionOfElement;
 	positionOfElement = getNodeWithInfo(e);
 
-	if (positionOfElement != nullptr) {
+	if (foundExactElement(positionOfElement, e) == true) {
 		positionOfElement->nrOfOccurences++;
 	}
 	else {
-		positionOfElement = getNodeAfterInfo(e);
 		insertBeforeNode(positionOfElement, e);
 		listLength++;
 	}
@@ -99,58 +88,59 @@ bool SortedBag::remove(TComp e) {
 			head->nrOfOccurences--;
 			if (head->nrOfOccurences == 0) {
 				listLength--;
+				delete head;
+				head = tail = nullptr;
 			}
-
-			delete head;
-			head = tail = nullptr;
 			return true;
 		}
 		return false;
 	}
 
 	Node* elementPosition = getNodeWithInfo(e);
-	if (elementPosition == nullptr) {
-		return false;
+	if (foundExactElement(elementPosition, e) == false) {
+		return false; // element does not exist
 	}
 	if (elementPosition->nrOfOccurences <= 0) {
-		return false;
-	}
-
-	Node* nextNode = elementPosition->nextNode;
-	Node* prevNode = elementPosition->prevNode;
-	if (nextNode == nullptr) { // last element
-		prevNode->nextNode = nullptr;
-		tail = prevNode;
-	}
-
-	else if (prevNode == nullptr) { // first element
-		nextNode->prevNode = nullptr;
-		head = nextNode;
-	}
-	
-	else {
-		prevNode->nextNode = nextNode;
-		nextNode->prevNode = prevNode;
+		return false; // safety check
 	}
 
 	nrOfElements--;
 	elementPosition->nrOfOccurences--;
+
 	if (elementPosition->nrOfOccurences == 0) {
+		Node* nextNode = elementPosition->nextNode;
+		Node* prevNode = elementPosition->prevNode;
+
+		if (nextNode == nullptr) { // last element
+			prevNode->nextNode = nullptr;
+			tail = prevNode;
+		}
+
+		else if (prevNode == nullptr) { // first element
+			nextNode->prevNode = nullptr;
+			head = nextNode;
+		}
+
+		else {
+			prevNode->nextNode = nextNode;
+			nextNode->prevNode = prevNode;
+		}
+
+		delete elementPosition;
 		listLength--;
 	}
 
-	delete elementPosition;
 	return true;
 }
 
 bool SortedBag::search(TComp elem) const {
-	return (getNodeWithInfo(elem) != nullptr);
+	return (foundExactElement(getNodeWithInfo(elem), elem));
 }
 
 int SortedBag::nrOccurrences(TComp elem) const {
 	Node* positionOfElement;
 	positionOfElement = getNodeWithInfo(elem);
-	if (positionOfElement != nullptr) {
+	if (foundExactElement(positionOfElement, elem) == true) {
 		return positionOfElement->nrOfOccurences;
 	}
 	return 0;
