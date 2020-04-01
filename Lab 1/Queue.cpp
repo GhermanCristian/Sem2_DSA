@@ -46,6 +46,7 @@ void Queue::push(TElem elem) {
 		arr = newArr;
 		capacity *= 2;
 	}
+
 	tail++;
 	arr[tail % capacity] = elem;
 }
@@ -64,6 +65,37 @@ TElem Queue::pop() {
 	TElem topElement = top();
 	head++;
 	return topElement;
+}
+
+TElem Queue::maximum() const {
+	if (isEmpty()) {
+		throw exception("empty queue");
+	}
+
+	TElem maxElement = arr[head % capacity];
+
+	if (head % capacity <= tail % capacity) {
+		for (int i = (head % capacity); i <= (tail % capacity); i++) {
+			if (arr[i] > maxElement) {
+				maxElement = arr[i];
+			}
+		}
+	}
+
+	else {
+		for (int i = (head % capacity); i < capacity; i++) {
+			if (arr[i] > maxElement) {
+				maxElement = arr[i];
+			}
+		}
+		for (int i = 0; i <= (tail % capacity); i++) {
+			if (arr[i] > maxElement) {
+				maxElement = arr[i];
+			}
+		}
+	}
+
+	return maxElement;
 }
 
 bool Queue::isEmpty() const {

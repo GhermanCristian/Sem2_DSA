@@ -132,10 +132,48 @@ void testQuantity() {
 	}
 }
 
+void testMax() {
+	cout << "Test max" << endl;
+	Queue q;
+
+	try {
+		q.maximum();
+		assert(false);
+	}
+	catch (...) {
+		assert(true);
+	}
+
+	q.push(100);
+	assert(q.maximum() == 100);
+
+	q.push(-100);
+	q.push(-101);
+	q.push(-102);
+	q.push(-103);
+	assert(q.maximum() == 100);
+
+	for (int i = 1; i <= 6; i++) {
+		for (int j = 30000; j >= -3000; j--) {
+			q.push(i + j);
+		}
+	}
+	assert(q.maximum() == 30006);
+
+	for (int i = 0; i <= 30000; i++) {
+		q.pop();
+	}
+	assert(q.maximum() == 30006);
+
+	q.push(30007);
+	assert(q.maximum() == 30007);
+}
+
 void testAllExtended() {
 	testCreate();
 	testPush();
 	testPop();
 	testMix();
 	testQuantity();
+	testMax();
 }

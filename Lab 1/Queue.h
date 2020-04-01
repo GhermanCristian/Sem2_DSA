@@ -17,7 +17,7 @@ private:
 	/*
 		Copies the content of arr from a given queue to the current one
 		Complexity:
-			- O(n), n = current capacity of the queue
+			- BC/AC/WC: theta(n), n = current capacity of the queue
 		Input:
 			- A queue from which the information will be copied
 		Output:
@@ -29,7 +29,7 @@ public:
 	/*
 		Queue constructor
 		Complexity:
-			- O(1)
+			- theta(1)
 		Input:
 			- None
 		Output:
@@ -42,7 +42,9 @@ public:
 	/*
 		Pushes an element to the end of the queue
 		Complexity:
-			- O(n), n = current capacity of the queue
+			- BC: theta(1), when the queue is not full and we don't need to resize
+			- AC: theta(n)
+			- WC: theta(n), when the queue is full and we need to resize
 		Input:
 			- e = TElem, which will be added to the queue
 		Output:
@@ -56,7 +58,7 @@ public:
 	/*
 		Determines the element from the front of the queue
 		Complexity:
-			- O(1)
+			- BC/AC/WC: theta(1)
 		Input:
 			- None
 		Output:
@@ -69,7 +71,7 @@ public:
 	/*
 		Determines and removes the element from the front of the queue
 		Complexity:
-			- O(1)
+			- BC/AC/WC: theta(1)
 		Input:
 			- None
 		Output:
@@ -79,11 +81,26 @@ public:
 			- Exception if the queue is empty	
 	*/
 
+	TElem maximum() const;
+	/*
+		Determines the maximum element from the queue
+		Complexity
+			- BC: theta(n)
+			- AC: theta(n)
+			- WC: theta(n), because we have to traverse the entire queue, which has n elements
+		Input:
+			- None
+		Output:
+			- Returns the element with the maximum value from the queue (if the queue is non-empty)
+		Throws:
+			- Exception, if the queue is empty
+	*/
+
 	bool isEmpty() const;
 	/*
 		Checks if the queue is empty
 		Complexity:
-			- O(1)
+			- BC/AC/WC: theta(1)
 		Input:
 			- None
 		Output:
@@ -110,7 +127,7 @@ public:
 	/*
 		Copy constructor
 		Complexity:
-			- O(n), n = capacity of newQueue
+			- BC/AC/WC: theta(n), n = current capacity of the queue
 		Input:
 			- newQueue = object of type Queue, whose content will be copied to the current Queue object
 		Output:
@@ -123,7 +140,7 @@ public:
 	/*
 		Assignment operator
 		Complexity:
-			- O(n), n = capacity of newQueue
+			- BC/AC/WC: theta(n), n = current capacity of the queue
 		Input:
 			- newQueue = object of type Queue, whose content will be copied to the current Queue object
 		Output:
