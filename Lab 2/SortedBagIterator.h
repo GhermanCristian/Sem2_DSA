@@ -17,7 +17,7 @@ class SortedBagIterator
 		/*
 			Constructor
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- None
 			Output:
@@ -29,7 +29,7 @@ class SortedBagIterator
 		/*
 			Determines the current element of the SortedBag
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- None
 			Output:
@@ -40,7 +40,7 @@ class SortedBagIterator
 		/*
 			Checks if the current position in the SortedBag is valid
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- None
 			Output:
@@ -52,7 +52,7 @@ class SortedBagIterator
 		/*
 			Advances to the next element in the SortedBag
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- None
 			Output:
@@ -63,7 +63,7 @@ class SortedBagIterator
 		/*
 			Sets the iterator to the first position in the SortedBag
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- None
 			Output:

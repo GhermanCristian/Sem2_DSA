@@ -30,7 +30,7 @@ class SortedBag {
 		/*
 			Inserts a new node before a given node
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- The node before we need to insert (which can be nullptr, signifying that we append to the list)
 				- The information of the new node
@@ -43,7 +43,9 @@ class SortedBag {
 			Determines the node which contains some information, or the one which would have been right after it (if
 			it doesn't exist)
 			Complexity:
-				- O(n), n = current length of the list
+				- BC: theta(1), when the element is on the first position
+				- AC: theta(n)
+				- WC: theta(n), when the element is on the last position
 			Input:
 				- The information of the node we search for
 			Output:
@@ -54,7 +56,7 @@ class SortedBag {
 		/*
 			Determines if a given node contains exactly the information that we want
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- The node which might hold the information that we want
 				- The information that we want
@@ -67,7 +69,7 @@ class SortedBag {
 		/*
 			Copies, one-by-one, all the elements from the list of another SortedBag to the current one
 			Complexity:
-				- O(n), n = current length of the list
+				- BC/AC/WC: theta(n), n = current length of the list
 			Input:
 				- The SortedBag we copy from
 			Output:
@@ -79,7 +81,7 @@ class SortedBag {
 		/*
 			Removes an instance of an element from a one-element-list
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- The information of the element that we want to remove
 			Output:
@@ -91,7 +93,7 @@ class SortedBag {
 		/*
 			Deletes a given Node and ensures the list isn't broken
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- The node that we want to delete
 			Output:
@@ -103,7 +105,7 @@ class SortedBag {
 		/*
 			Constructor
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- The relation between the elements
 			Output:
@@ -114,7 +116,9 @@ class SortedBag {
 		/*
 			Adds an element to the SortedBag
 			Complexity:
-				- O(n), n = current length of the list of elements from the SortedBag
+				- BC: theta(1), when the element belongs on the first position
+				- AC: theta(n)
+				- WC: theta(n), when the element belongs on the last position
 			Input:
 				- The element that we want to add
 			Output:
@@ -125,7 +129,9 @@ class SortedBag {
 		/*
 			Removes an instance of an element from the SortedBag
 			Complexity:
-				- O(n), n = current length of the list of elements from the SortedBag
+				- BC: theta(1), when the element was on the first position
+				- AC: theta(n)
+				- WC: theta(n), when the element was on the last position, or it didn't exist
 			Input:
 				- The element that we want to remove
 			Output:
@@ -137,7 +143,9 @@ class SortedBag {
 		/*
 			Searches for an element in the SortedBag
 			Complexity:
-				- O(n), n = current length of the list of elements from the SortedBag
+				- BC: theta(1), when the element is on the first position
+				- AC: theta(n)
+				- WC: theta(n), when the element is on the last position, or it's not int the list
 			Input:
 				- The element that we search for
 			Output:
@@ -149,7 +157,9 @@ class SortedBag {
 		/*
 			Determines the number of occurences of an element in the SortedBag
 			Complexity:
-				- O(n), n = current length of the list of elements from the SortedBag
+				- BC: theta(1), when the element is on the first position in the list
+				- AC: theta(n)
+				- WC: theta(n), when the element is on the last position, or it's not int the list
 			Input:
 				- The element whose number of occurences we want to determine
 			Output:
@@ -160,7 +170,7 @@ class SortedBag {
 		/*
 			Determines the size of the SortedBag
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- None
 			Output:
@@ -171,7 +181,7 @@ class SortedBag {
 		/*
 			Returns an iterator of the SortedBag
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- None
 			Output:
@@ -182,7 +192,7 @@ class SortedBag {
 		/*
 			Checks if the SortedBag is empty
 			Complexity:
-				- O(1)
+				- BC/AC/WC: theta(1)
 			Input:
 				- None
 			Output:
@@ -194,7 +204,7 @@ class SortedBag {
 		/*
 			Copy constructor
 			Complexity:
-				- O(n), n = current length of the list of elements from the SortedBag
+				- BC/AC/WC: theta(n), n = current length of the list of elements from the SortedBag
 			Input:
 				- The SortedBag we copy from
 			Output:
@@ -205,7 +215,7 @@ class SortedBag {
 		/*
 			Assignment operator
 			Complexity:
-				- O(n), n = current length of the list of elements from the SortedBag
+				- BC/AC/WC: theta(n), n = current length of the list of elements from the SortedBag
 			Input:
 				- The SortedBag we copy from
 			Output:
@@ -216,7 +226,7 @@ class SortedBag {
 		/*
 			Destructor
 			Complexity:
-				- O(n), n = current length of the list of elements from the SortedBag
+				- BC/AC/WC: theta(n), n = current length of the list of elements from the SortedBag
 			Input:
 				- None
 			Output:

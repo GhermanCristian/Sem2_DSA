@@ -2,6 +2,10 @@
 # Created by https://www.gitignore.io/api/c++,python,windows,eclipse,visualstudio
 # Edit at https://www.gitignore.io/?templates=c++,python,windows,eclipse,visualstudio
 
+*.txt
+*.pdf
+*.docx
+
 ### C++ ###
 # Prerequisites
 *.d
