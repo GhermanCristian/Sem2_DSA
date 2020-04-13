@@ -9,7 +9,6 @@ class SortedBagIterator
 
 	private:
 		int currentFrequency; // frequency of the current element
-		int currentElement; // current element in the list
 		Node* currentNode; // the node associated with the current element
 		const SortedBag& bag;
 

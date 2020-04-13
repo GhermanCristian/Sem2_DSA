@@ -23,7 +23,7 @@ class SortedBag {
 		Node* head; // first node in the list
 		Node* tail; // last node in the list
 		Relation currentRelation;
-		int listLength; // how many nodes in the list (<=> how many different elements)
+		int listLength; // how many nodes in the list (<=> how many unique elements)
 		int nrOfElements; // total elements (including duplicates)
 		
 		void insertBeforeNode(Node* rightNode, TComp info);

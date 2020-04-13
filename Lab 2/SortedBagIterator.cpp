@@ -16,7 +16,7 @@ TComp SortedBagIterator::getCurrent() {
 }
 
 bool SortedBagIterator::valid() {
-	return (currentElement < bag.listLength and currentFrequency < currentNode->nrOfOccurences);
+	return (currentNode != nullptr and currentFrequency < currentNode->nrOfOccurences);
 }
 
 void SortedBagIterator::next() {
@@ -26,13 +26,11 @@ void SortedBagIterator::next() {
 	currentFrequency++;
 	if (currentFrequency == currentNode->nrOfOccurences) {
 		currentFrequency = 0;
-		currentElement++;
 		currentNode = currentNode->nextNode;
 	}
 }
 
 void SortedBagIterator::first() {
-	currentElement = 0;
 	currentFrequency = 0;
 	currentNode = bag.head;
 }

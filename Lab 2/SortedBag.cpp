@@ -1,6 +1,5 @@
 #include "SortedBag.h"
 #include "SortedBagIterator.h"
-#include <iostream>
 
 SortedBag::SortedBag(Relation r) {
 	head = nullptr;
@@ -37,6 +36,8 @@ void SortedBag::insertBeforeNode(Node* rightNode, TComp info){
 
 Node* SortedBag::getNodeWithInfo(TComp info) const {
 	for (Node* listIterator = head; listIterator != nullptr; listIterator = listIterator->nextNode) {
+		// the search ends when we get past the point where the element should have been 
+		// or when we find the exact element that we need
 		if (currentRelation(listIterator->info, info) == false or listIterator->info == info) {
 			return listIterator;
 		}
@@ -146,7 +147,7 @@ bool SortedBag::remove(TComp e) {
 		return false; // element does not exist
 	}
 	if (elementPosition->nrOfOccurences <= 0) {
-		return false; // safety check
+		return false; // safety check; normally if an element has no occurences it is removed from the list
 	}
 
 	nrOfElements--;

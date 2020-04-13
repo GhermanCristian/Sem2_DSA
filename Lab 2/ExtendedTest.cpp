@@ -286,8 +286,6 @@ void testIterator(Relation rel) {
 	assert(count == sb.size());
 }
 
-
-
 void testAllExtended() {
 	testCreate();
 	testAdd(relation2);
