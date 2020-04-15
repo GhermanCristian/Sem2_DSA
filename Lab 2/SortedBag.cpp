@@ -1,5 +1,6 @@
 #include "SortedBag.h"
 #include "SortedBagIterator.h"
+#include <exception>
 
 SortedBag::SortedBag(Relation r) {
 	head = nullptr;
@@ -132,7 +133,7 @@ void SortedBag::deleteNode(Node* elementPosition){
 	listLength--;
 }
 
-bool SortedBag::remove(TComp e) {
+bool SortedBag::remove(TComp e, Node* elementPosition) {
 	if (listLength == 0) {
 		return false;
 	}
@@ -142,7 +143,10 @@ bool SortedBag::remove(TComp e) {
 	}
 
 	// 2 or more elements
-	Node* elementPosition = getNodeWithInfo(e);
+	if (elementPosition == nullptr) {
+		elementPosition = getNodeWithInfo(e);
+	}
+	
 	if (foundExactElement(elementPosition, e) == false) {
 		return false; // element does not exist
 	}
@@ -158,6 +162,21 @@ bool SortedBag::remove(TComp e) {
 	}
 
 	return true;
+}
+
+int SortedBag::removeOccurences(int nrOccurences, TComp currentElement){
+	if (nrOccurences < 0) {
+		throw std::exception("Invalid nr of occurences");
+	}
+
+	if (listLength == 0 or nrOccurences == 0) {
+		return 0;
+	}
+
+	int nrRemoved;
+	Node* currentPosition = getNodeWithInfo(currentElement);
+	for (nrRemoved = 0; remove(currentElement, currentPosition) == true and nrRemoved < nrOccurences; nrRemoved++);
+	return nrRemoved;
 }
 
 bool SortedBag::search(TComp elem) const {

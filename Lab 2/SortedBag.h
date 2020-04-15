@@ -125,18 +125,37 @@ class SortedBag {
 				- The element is added to the list
 		*/
 
-		bool remove(TComp e);
+		bool remove(TComp e, Node* elementPosition = nullptr);
 		/*
 			Removes an instance of an element from the SortedBag
 			Complexity:
 				- BC: theta(1), when the element was on the first position
-				- AC: theta(n)
-				- WC: theta(n), when the element was on the last position, or it didn't exist
+				If the position is not provided:
+					- AC: theta(n)
+					- WC: theta(n), when the element was on the last position, or it didn't exist
+				Otherwise both AC/WC are theta(1)
 			Input:
 				- The element that we want to remove
+				- (optional) A pointer to the position of the element in the list
 			Output:
 				- Returns true, if the element existed, in which case it is removed from the list
 				- False, otherwise
+		*/
+
+		int removeOccurences(int nrOccurences, TComp currentElement);
+		/*
+			Removes nr occurrences of elem. 
+			If the element appears less than nr times, all occurrences will be removed.
+			Complexity:
+				- BC: theta(1), when the element was on the first position
+				- AC: theta(n)
+				- WC: theta(n), when the element was on the last position, or it didn't exist 
+			Input:
+				- The nr of occurences which are removed
+				- The element we want to remove
+			Output:
+				- Returns the number of times the element was removed.
+				- Throws an exception if nr is negative
 		*/
 
 		bool search(TComp e) const;
