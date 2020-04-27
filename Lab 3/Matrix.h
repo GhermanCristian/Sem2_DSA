@@ -1,9 +1,15 @@
 #pragma once
-#include "matrixElement.h"
 
 //DO NOT CHANGE THIS PART
 #define NULL_TELEM 0
 #define INITIAL_CAPACITY 100
+typedef int TElem;
+
+struct MatrixElement {
+	int line;
+	int column;
+	TElem value;
+};
 
 class Matrix {
 	private:
@@ -17,9 +23,14 @@ class Matrix {
 		int numberOfLines;
 		int numberOfColumns;
 
-		void insertElement(int line, int column, TElem value);
-		void removeElement(int line, int column); // happens when we add sth with value == 0
-		int getPositionLargerThan(TElem value);
+		void resizeLists();
+		void insertAfterPosition(MatrixElement currentElement, int position);
+		void removeElement(int position); // happens when we add sth with value == 0
+		bool validPosition(int row, int column) const;
+		bool elementSmallerThan(MatrixElement currentElement, int i, int j) const;
+		bool elementEqualTo(MatrixElement currentElement, int i, int j) const;
+		bool foundExactElement(int previousPosition, int i, int j) const;
+		int getPositionSmallerThan(int i, int j) const;
 
 	public:
 		//constructor

@@ -1,33 +1,94 @@
 #include "Matrix.h"
 #include <exception>
+#include <iostream>
 using namespace std;
 
-void Matrix::insertElement(int line, int column, TElem value){
-	if (value == 0) {
-		removeElement(line, column);
-		return;
+void Matrix::resizeLists(){
+	MatrixElement* auxList1 = new MatrixElement[this->capacity * 2];
+	int* auxList2 = new int[this->capacity * 2];
+
+	for (int i = 0; i < this->capacity; i++) {
+		auxList1[i] = this->elements[i];
+		auxList2[i] = this->nextPosition[i];
 	}
-	
-	int position = getPositionLargerThan(value);
-	if (position == -1) {
-		; // we add the element to the end of the list
+	for (int i = this->capacity; i < this->capacity * 2 - 1; i++) {
+		auxList2[i] = i + 1;
+	}
+	auxList2[this->capacity * 2 - 1] = -1;
+	firstEmpty = this->capacity;
+	this->capacity *= 2;
+
+	delete this->elements;
+	delete this->nextPosition;
+	this->elements = auxList1;
+	this->nextPosition = auxList2;
+}
+
+void Matrix::insertAfterPosition(MatrixElement currentElement, int position){
+	this->nrElements++;
+	if (this->nrElements == this->capacity) {
+		resizeLists();
+	}
+
+	int newPosition = firstEmpty;
+	firstEmpty = this->nextPosition[firstEmpty];
+	this->elements[newPosition] = currentElement;
+
+	if (position == -1) { // new head
+		this->nextPosition[newPosition] = this->head;
+		this->head = newPosition;
 	}
 	else {
-		;
+		this->nextPosition[newPosition] = this->nextPosition[position];
+		this->nextPosition[position] = newPosition;
+	}
+}
+
+void Matrix::removeElement(int position){
+	this->nrElements--;
+	int removedPosition = head;
+
+	if (position == -1) {
+		removedPosition = head;
+		head = nextPosition[head];
+		nextPosition[removedPosition] = firstEmpty;
+		firstEmpty = removedPosition;
+	}
+	else {
+		removedPosition = nextPosition[position];
+		nextPosition[position] = nextPosition[nextPosition[position]];
+		nextPosition[removedPosition] = firstEmpty;
+		firstEmpty = removedPosition; // the removed position (nextPos[pos]) is marked as empty
+	}
+}
+
+bool Matrix::validPosition(int row, int column) const{
+	return row >= 0 and row < this->numberOfLines and column >= 0 and column < this->numberOfColumns;
+}
+
+bool Matrix::elementSmallerThan(MatrixElement currentElement, int i, int j) const{
+	return currentElement.line < i or (currentElement.line == i and currentElement.column < j);
+}
+
+bool Matrix::elementEqualTo(MatrixElement currentElement, int i, int j) const{
+	return currentElement.line == i and currentElement.column == j;
+}
+
+bool Matrix::foundExactElement(int position, int i, int j) const {
+	return position != -1 and elementEqualTo(this->elements[position], i, j);
+}
+
+int Matrix::getPositionSmallerThan(int i, int j) const {
+	int currentPosition = this->head;
+
+	if (this->head == -1 or !elementSmallerThan(elements[head], i, j)) {
+		return -1;
 	}
 
-	this->nrElements++;
-}
-
-void Matrix::removeElement(int line, int column){
-	this->nrElements--;
-}
-
-int Matrix::getPositionLargerThan(TElem value){
-	int currentPosition;
-	for (currentPosition = this->head; currentPosition != -1 and value > elements[currentPosition].getValue(); currentPosition = nextPosition[currentPosition]);
-
-	return currentPosition; // if -1 => the element should be appended to the list (there is no "larger")
+	while (nextPosition[currentPosition] != -1 and elementSmallerThan(elements[nextPosition[currentPosition]], i, j)) {
+		currentPosition = nextPosition[currentPosition];
+	}
+	return currentPosition;
 }
 
 Matrix::Matrix(int nrLines, int nrCols) {
@@ -58,12 +119,53 @@ int Matrix::nrColumns() const {
 }
 
 TElem Matrix::element(int i, int j) const {
-	//TODO - Implementation
-	return NULL_TELEM;
+	if (this->validPosition(i, j) == false) {
+		throw std::exception("Invalid position");
+	}
+
+	int previousPosition = getPositionSmallerThan(i, j);
+	int actualPosition;
+	if (previousPosition == -1) {
+		actualPosition = this->head;
+	}
+	else {
+		actualPosition = nextPosition[previousPosition];
+	}
+	if (foundExactElement(actualPosition, i, j) == false) {
+		return 0;
+	}
+	return this->elements[actualPosition].value;
 }
 
 TElem Matrix::modify(int i, int j, TElem e) {
-	//TODO - Implementation
+	if (this->validPosition(i, j) == false) {
+		throw std::exception("Invalid position");
+	}
+
+	MatrixElement currentElement{ i, j, e };
+	int previousPosition = getPositionSmallerThan(i, j);
+	int actualPosition;
+	if (previousPosition == -1) {
+		actualPosition = this->head;
+	}
+	else {
+		actualPosition = nextPosition[previousPosition];
+	}
+
+	if (foundExactElement(actualPosition, i, j) == true) {
+		int previousValue;
+		previousValue = this->elements[actualPosition].value;
+		if (e == NULL_TELEM) {
+			this->removeElement(previousPosition);
+		}
+		else {
+			this->elements[actualPosition] = currentElement;
+		}
+		return previousValue;
+	}
+	else if (e != NULL_TELEM){
+		this->insertAfterPosition(currentElement, previousPosition);
+	}
 	return NULL_TELEM;
 }
 

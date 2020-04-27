@@ -49,6 +49,7 @@ void testQuantity() {
 					m.modify(i, v2, i + v2);
 		}
 	}
+	
 	for (int i = 0; i <= m.nrLines() / 2; i++) {
 		for (int j = 0; j <= m.nrColumns() / 2; j++)
 		{
@@ -66,6 +67,7 @@ void testQuantity() {
 					m.modify(i, v2, i + v2);
 		}
 	}
+	
 	for (int i = 0; i < m.nrLines(); i++)
 		for (int j = 0; j < m.nrColumns(); j++)
 			if (i % 2 == 0 && j % 2 == 0)
@@ -74,6 +76,7 @@ void testQuantity() {
 				if (j % 3 == 0)
 					assert(m.element(i, j) == i + j);
 				else assert(m.element(i, j) == NULL_TELEM);
+	
 }
 
 void testExceptions() {
@@ -118,7 +121,6 @@ void testMix() {
 			}
 		}
 	}
-
 	for (int i = 0; i < size/2; i++) {
 		for (int j = 0; j < size; j++) {
 			if (i == j) {
