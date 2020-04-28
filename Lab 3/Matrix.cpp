@@ -3,6 +3,25 @@
 #include <iostream>
 using namespace std;
 
+Matrix::Matrix(int nrLines, int nrCols) {
+	this->numberOfLines = nrLines;
+	this->numberOfColumns = nrCols;
+
+	// initialising the SLLA
+	this->capacity = INITIAL_CAPACITY;
+	this->elements = new MatrixElement[this->capacity];
+	this->nextPosition = new int[this->capacity];
+
+	this->firstEmpty = 0; // list is empty
+	for (int i = 0; i < this->capacity - 1; i++) {
+		this->nextPosition[i] = i + 1;
+	}
+	this->nextPosition[this->capacity - 1] = -1;
+
+	this->head = -1; // list is empty => there is no head
+	this->nrElements = 0;
+}
+
 void Matrix::resizeLists(){
 	MatrixElement* auxList1 = new MatrixElement[this->capacity * 2];
 	int* auxList2 = new int[this->capacity * 2];
@@ -24,7 +43,7 @@ void Matrix::resizeLists(){
 	this->nextPosition = auxList2;
 }
 
-void Matrix::insertAfterPosition(MatrixElement currentElement, int position){
+void Matrix::insertAfterPosition(const MatrixElement& currentElement, int position){
 	this->nrElements++;
 	if (this->nrElements == this->capacity) {
 		resizeLists();
@@ -44,33 +63,31 @@ void Matrix::insertAfterPosition(MatrixElement currentElement, int position){
 	}
 }
 
-void Matrix::removeElement(int position){
+void Matrix::removeElementAfterPosition(int position){
 	this->nrElements--;
 	int removedPosition = head;
 
 	if (position == -1) {
 		removedPosition = head;
 		head = nextPosition[head];
-		nextPosition[removedPosition] = firstEmpty;
-		firstEmpty = removedPosition;
 	}
 	else {
 		removedPosition = nextPosition[position];
 		nextPosition[position] = nextPosition[nextPosition[position]];
-		nextPosition[removedPosition] = firstEmpty;
-		firstEmpty = removedPosition; // the removed position (nextPos[pos]) is marked as empty
 	}
+	nextPosition[removedPosition] = firstEmpty;
+	firstEmpty = removedPosition; // the removed position (nextPos[pos]) is marked as empty
 }
 
 bool Matrix::validPosition(int row, int column) const{
 	return row >= 0 and row < this->numberOfLines and column >= 0 and column < this->numberOfColumns;
 }
 
-bool Matrix::elementSmallerThan(MatrixElement currentElement, int i, int j) const{
+bool Matrix::elementSmallerThan(const MatrixElement& currentElement, int i, int j) const{
 	return currentElement.line < i or (currentElement.line == i and currentElement.column < j);
 }
 
-bool Matrix::elementEqualTo(MatrixElement currentElement, int i, int j) const{
+bool Matrix::elementEqualTo(const MatrixElement& currentElement, int i, int j) const{
 	return currentElement.line == i and currentElement.column == j;
 }
 
@@ -89,25 +106,6 @@ int Matrix::getPositionSmallerThan(int i, int j) const {
 		currentPosition = nextPosition[currentPosition];
 	}
 	return currentPosition;
-}
-
-Matrix::Matrix(int nrLines, int nrCols) {
-	this->numberOfLines = nrLines;
-	this->numberOfColumns = nrCols;
-
-	// initialising the SLLA
-	this->capacity = INITIAL_CAPACITY;
-	this->elements = new MatrixElement[this->capacity];
-	this->nextPosition = new int[this->capacity];
-
-	this->firstEmpty = 0; // list is empty
-	for (int i = 0; i < this->capacity - 1; i++) {
-		this->nextPosition[i] = i + 1;
-	}
-	this->nextPosition[this->capacity - 1] = -1;
-
-	this->head = -1; // list is empty => there is no head
-	this->nrElements = 0;
 }
 
 int Matrix::nrLines() const {
@@ -156,7 +154,7 @@ TElem Matrix::modify(int i, int j, TElem e) {
 		int previousValue;
 		previousValue = this->elements[actualPosition].value;
 		if (e == NULL_TELEM) {
-			this->removeElement(previousPosition);
+			this->removeElementAfterPosition(previousPosition);
 		}
 		else {
 			this->elements[actualPosition] = currentElement;
