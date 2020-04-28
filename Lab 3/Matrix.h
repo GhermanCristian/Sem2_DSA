@@ -34,6 +34,17 @@ class Matrix {
 				- The size of the lists is doubled
 		*/
 
+		void independentListsCopy(const Matrix& newMatrix);
+		/*
+			Copies the content of the lists from another Matrix to the current one
+			Complexity:
+				- BC/AC/WC: theta(n)
+			Input:
+				- The Matrix we copy from
+			Output:
+				- The content is copied (and the lists are resized if necessary)
+		*/
+
 		void insertAfterPosition(const MatrixElement& currentElement, int position);
 		/*
 			Inserts the element after a given position
@@ -181,6 +192,30 @@ class Matrix {
 			Output:
 				- Returns the previous value of the element at the given coordinates
 				- Throws an error if the coordinates are invalid
+		*/
+
+		Matrix& operator = (const Matrix& originalMatrix);
+		/*
+			Overloaded assignment operator
+			Complexity:
+				- BC: theta(1), when the given Matrix is the same as the current one
+				- AC: theta(n)
+				- WC: theta(n), when the two Matrices are different
+			Input:
+				- The Matrix we copy from
+			Output:
+				- Returns a reference to a Matrix object with the properties of the original one
+		*/
+
+		Matrix(const Matrix& originalMatrix);
+		/*
+			Matrix copy constructor
+			Complexity:
+				- BC/AC/WC: theta(n)
+			Input:
+				- The Matrix we copy from
+			Output:
+				- A new Matrix with the properties of the
 		*/
 
 		~Matrix();

@@ -43,6 +43,21 @@ void Matrix::resizeLists(){
 	this->nextPosition = auxList2;
 }
 
+void Matrix::independentListsCopy(const Matrix& newMatrix){
+	if (newMatrix.capacity != this->capacity) {
+		delete this->elements;
+		delete this->nextPosition;
+
+		this->elements = new MatrixElement[newMatrix.capacity];
+		this->nextPosition = new int[newMatrix.capacity];
+	}
+
+	for (int i = 0; i < newMatrix.capacity; i++) {
+		this->elements[i] = newMatrix.elements[i];
+		this->nextPosition[i] = newMatrix.nextPosition[i];
+	}
+}
+
 void Matrix::insertAfterPosition(const MatrixElement& currentElement, int position){
 	this->nrElements++;
 	if (this->nrElements == this->capacity) {
@@ -165,6 +180,30 @@ TElem Matrix::modify(int i, int j, TElem e) {
 		this->insertAfterPosition(currentElement, previousPosition);
 	}
 	return NULL_TELEM;
+}
+
+Matrix& Matrix::operator = (const Matrix& originalMatrix){
+	if (this != &originalMatrix) {
+		this->capacity = originalMatrix.capacity;
+		this->head = originalMatrix.head;
+		this->firstEmpty = originalMatrix.firstEmpty;
+		this->nrElements = originalMatrix.nrElements;
+		this->numberOfLines = originalMatrix.numberOfLines;
+		this->numberOfColumns = originalMatrix.numberOfColumns;
+		this->independentListsCopy(originalMatrix);
+	}
+
+	return *this;
+}
+
+Matrix::Matrix(const Matrix& originalMatrix){
+	this->capacity = originalMatrix.capacity;
+	this->head = originalMatrix.head;
+	this->firstEmpty = originalMatrix.firstEmpty;
+	this->nrElements = originalMatrix.nrElements;
+	this->numberOfLines = originalMatrix.numberOfLines;
+	this->numberOfColumns = originalMatrix.numberOfColumns;
+	this->independentListsCopy(originalMatrix);
 }
 
 Matrix::~Matrix(){
