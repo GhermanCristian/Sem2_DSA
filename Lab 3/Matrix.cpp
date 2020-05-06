@@ -1,4 +1,5 @@
 #include "Matrix.h"
+#include "matrixIterator.h"
 #include <exception>
 #include <iostream>
 using namespace std;
@@ -157,7 +158,7 @@ TElem Matrix::modify(int i, int j, TElem e) {
 
 	MatrixElement currentElement{ i, j, e };
 	int previousPosition = getPositionSmallerThan(i, j);
-	int actualPosition;
+	int actualPosition; // actual position on which the new element belongs
 	if (previousPosition == -1) {
 		actualPosition = this->head;
 	}
@@ -180,6 +181,13 @@ TElem Matrix::modify(int i, int j, TElem e) {
 		this->insertAfterPosition(currentElement, previousPosition);
 	}
 	return NULL_TELEM;
+}
+
+MatrixIterator Matrix::iterator(int line) const{
+	if (line < 0 or line >= this->numberOfLines) {
+		throw std::exception("Invalid line");
+	}
+	return MatrixIterator(*this, line);
 }
 
 Matrix& Matrix::operator = (const Matrix& originalMatrix){

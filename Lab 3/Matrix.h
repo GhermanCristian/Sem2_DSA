@@ -11,7 +11,11 @@ struct MatrixElement {
 	TElem value;
 };
 
+class MatrixIterator;
+
 class Matrix {
+	friend class MatrixIterator;
+
 	private:
 		MatrixElement* elements;
 		int* nextPosition;
@@ -192,6 +196,12 @@ class Matrix {
 			Output:
 				- Returns the previous value of the element at the given coordinates
 				- Throws an error if the coordinates are invalid
+		*/
+
+		MatrixIterator iterator(int line) const;
+		/*
+			Returns an iterator over the elements from one line of the matrix
+			If the line is invalid, throws an exception
 		*/
 
 		Matrix& operator = (const Matrix& originalMatrix);

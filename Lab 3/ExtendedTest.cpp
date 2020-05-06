@@ -3,6 +3,7 @@
 #include "ExtendedTest.h"
 #include <iostream>
 #include <exception>
+#include "matrixIterator.h"
 
 using namespace std;
 
@@ -158,10 +159,61 @@ void testMix() {
 	}
 }
 
+void testIterator() {
+	Matrix m(15, 15);
+	for (int i = 0; i < 15; i++) {
+		for (int j = 0; j < 15; j++) {
+			m.modify(i, j, i + j + 1);
+		}
+	}
+
+	try {
+		MatrixIterator iter1 = m.iterator(-1);
+		MatrixIterator iter2 = m.iterator(15);
+		assert(false);
+	}
+	catch (...) {
+		assert(true);
+	}
+
+	MatrixIterator iter = m.iterator(0);
+	assert(iter.valid() == true);
+
+	int currentJ = 0;
+	int currentI = 0;
+	while (iter.valid() == true) {
+		assert(iter.getCurrent() == currentI + currentJ + 1);
+		currentJ++;
+		iter.next();
+	}
+
+	try {
+		iter.next();
+		assert(false);
+	}
+	catch (...) {
+		assert(true);
+	}
+
+	for (int i = 0; i < 15; i++) {
+		m.modify(0, i, NULL_TELEM);
+	}
+
+	iter.first();
+	assert(iter.valid() == true);
+
+	while (iter.valid() == true) {
+		assert(iter.getCurrent() == NULL_TELEM);
+		currentJ++;
+		iter.next();
+	}
+}
+
 void testAllExtended() {
 	testCreate();
 	testModify();
 	testQuantity();
 	testMix();
 	testExceptions();
+	testIterator();
 }
