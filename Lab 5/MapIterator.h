@@ -1,19 +1,23 @@
 #pragma once
 #include "Map.h"
-class MapIterator
-{
+
+class MapIterator{
 	//DO NOT CHANGE THIS PART
 	friend class Map;
-private:
-	const Map& map;
-	//TODO - Representation
 
-	MapIterator(const Map& m);
-public:
-	void first();
-	void next();
-	TElem getCurrent();
-	bool valid() const;
+	private:
+		const Map& map;
+
+		int positionInHashTable;
+		Node* positionInLinkedList;
+
+		MapIterator(const Map& m);
+
+	public:
+		void first();
+		void next();
+		TElem getCurrent();
+		bool valid() const;
 };
 
 

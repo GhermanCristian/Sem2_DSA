@@ -23,7 +23,7 @@ class Map {
 	friend class MapIterator;
 
 	private:
-		int numberOfElements;
+		int numberOfPairs;
 		int numberOfPositions; // also used in the hash function
 		Node** hashTable; // this will store the "heads" of the linked lists
 

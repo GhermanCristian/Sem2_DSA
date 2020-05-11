@@ -8,7 +8,7 @@ Map::Map() {
 		this->hashTable[i] = NULL;
 	}
 
-	this->numberOfElements = 0;
+	this->numberOfPairs = 0;
 	this->numberOfPositions = INITIAL_HASH_TABLE_SIZE;
 }
 
@@ -82,13 +82,13 @@ TValue Map::add(TKey c, TValue v){
 
 	if (this->hashTable[positionInHashTable] == NULL) {
 		this->addToLinkedList(positionInHashTable, c, v);
-		this->numberOfElements++;
+		this->numberOfPairs++;
 	}
 	else {
 		Node* positionInLinkedList = this->searchInLinkedList(positionInHashTable, c);
 		if (positionInLinkedList == NULL) {
 			this->addToLinkedList(positionInHashTable, c, v);
-			this->numberOfElements++;
+			this->numberOfPairs++;
 		}
 		else {
 			TValue previousValue = positionInLinkedList->keyValuePair.second;
@@ -124,7 +124,7 @@ TValue Map::remove(TKey c){
 	if (this->hashTable[positionInHashTable]->keyValuePair.first == c) {
 		TValue previousValue = this->hashTable[positionInHashTable]->keyValuePair.second;
 		this->removeLinkedListHead(positionInHashTable);
-		this->numberOfElements--;
+		this->numberOfPairs--;
 		return previousValue;
 	}
 
@@ -133,18 +133,18 @@ TValue Map::remove(TKey c){
 		return NULL_TVALUE;
 	}
 
-	TValue previousValue = positionBeforeKey->keyValuePair.second;
+	TValue previousValue = positionBeforeKey->nextNode->keyValuePair.second;
 	this->removeFromLinkedList(positionBeforeKey);
-	this->numberOfElements--;
+	this->numberOfPairs--;
 	return previousValue;
 }
 
 int Map::size() const {
-	return this->numberOfElements;
+	return this->numberOfPairs;
 }
 
 bool Map::isEmpty() const{
-	return this->numberOfElements == 0;
+	return this->numberOfPairs == 0;
 }
 
 MapIterator Map::iterator() const {
