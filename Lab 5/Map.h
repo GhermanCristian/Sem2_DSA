@@ -10,7 +10,7 @@ typedef std::pair<TKey, TValue> TElem;
 #define NULL_TELEM pair<TKey, TValue>(-11111, -11111)
 const double HASH_LOAD_FACTOR = 0.7;
 const int MULTIPLYING_FACTOR = 2;
-const int INITIAL_HASH_TABLE_SIZE = 100;
+const int INITIAL_HASH_TABLE_SIZE = 50;
 class MapIterator;
 
 struct Node {

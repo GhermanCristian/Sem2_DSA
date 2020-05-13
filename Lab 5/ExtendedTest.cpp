@@ -263,12 +263,48 @@ void testQuantity() {
 	assert(m.size() == 0);
 }
 
+void testCopyConstructorAndAssignmentOperator() {
+	Map m; 
+	cout << "Test copy constructor and assignment operator\n" << endl;
+
+	for (int i = 0; i < 1000; i++) {
+		m.add(i, i);
+	}
+
+	Map m1(m);
+	assert(m1.size() == m.size());
+	MapIterator iter = m.iterator();
+	while (iter.valid()) {
+		assert(m1.search(iter.getCurrent().first) == iter.getCurrent().second);
+		iter.next();
+	}
+
+	Map m2;
+	m2 = m;
+	assert(m2.size() == m.size());
+	iter.first();
+	while (iter.valid()) {
+		assert(m2.search(iter.getCurrent().first) == iter.getCurrent().second);
+		iter.next();
+	}
+
+	m2 = m1;
+	assert(m2.size() == m1.size());
+	MapIterator iter1 = m1.iterator();
+	iter1.first();
+	while (iter1.valid()) {
+		assert(m2.search(iter1.getCurrent().first) == iter1.getCurrent().second);
+		iter1.next();
+	}
+}
+
 void testAllExtended() {
 	testCreate();
 	testAdd();
 	testRemove();
 	testIterator();
 	testQuantity();
+	testCopyConstructorAndAssignmentOperator();
 }
 
 

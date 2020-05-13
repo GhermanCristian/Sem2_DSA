@@ -107,6 +107,13 @@ void Map::deleteLinkedList(Node*& linkedListHead){
 }
 
 void Map::deleteHashTable(Node**& hashTable, int numberOfPositions){
+	// in the copy constructor, this part is called before actually allocating memory for the hash table
+	// so it crashed when it got here;
+	// we now ensure against that -> if the list isn't even allocated, we don't need to delete it
+	if (hashTable == NULL) {
+		return;
+	}
+
 	for (int i = 0; i < numberOfPositions; i++) {
 		this->deleteLinkedList(hashTable[i]);
 	}
@@ -117,6 +124,8 @@ void Map::independentHashTableCopy(const Map& originalMap){
 	Node* currentNode;
 	int positionInHashTable;
 
+	// this should be done with the previous number of positions (hence why in the assignment operator it is called
+	// before changing it) - because if the number differs we might access unavailable memory
 	this->deleteHashTable(this->hashTable, this->numberOfPositions);
 	this->hashTable = new Node * [originalMap.numberOfPositions];
 	for (int i = 0; i < originalMap.numberOfPositions; i++) {
@@ -210,10 +219,16 @@ MapIterator Map::iterator() const {
 
 Map& Map::operator=(const Map& originalMap){
 	if (this != &originalMap) {
+		// I have changed the order here because this will need to destroy a list which was allocated
+		// (as opposed to the copy constr, which destroys an un-allocated list -> I prevented that by
+		// checking if the list is NULL (<=> it wasn't allocated yet)
+		// In this case, however, there already is a list, whose number of elements might differ from the new one
+		// in which case the deletion algorithm will try to access unavailable memory (because the number of
+		// positions has been updated - most probably increased - prior to the deletion
+		this->independentHashTableCopy(originalMap);
 		this->numberOfPairs = originalMap.numberOfPairs;
 		this->numberOfPositions = originalMap.numberOfPositions;
 		this->hashFunctionDivisionValue = originalMap.hashFunctionDivisionValue;
-		this->independentHashTableCopy(originalMap);
 	}
 
 	return *this;

@@ -34,7 +34,6 @@ void testAll() { //call each function to see if it is implemented
 	}
 	assert(s1 == 19);
 	assert(s2 == 19);
-
 }
 
 
