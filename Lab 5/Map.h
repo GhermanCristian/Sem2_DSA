@@ -36,6 +36,8 @@ class Map {
 		void removeFromLinkedList(Node* positionBeforeKey);
 		bool checkIfOverloaded();
 		void resizeHashTable();
+		void deleteLinkedList(Node*& linkedListHead);
+		void deleteHashTable(Node**& hashTable, int numberOfPositions);
 
 	public:
 		Map();
