@@ -10,6 +10,7 @@ Map::Map() {
 
 	this->numberOfPairs = 0;
 	this->numberOfPositions = INITIAL_HASH_TABLE_SIZE;
+	this->hashFunctionDivisionValue = INITIAL_HASH_TABLE_SIZE;
 }
 
 Map::~Map() {
@@ -28,14 +29,14 @@ int Map::hashFunction(TKey originalKey) const {
 	if (originalKey < 0) {
 		originalKey = -originalKey;
 	}
-	return originalKey % this->numberOfPositions;
+	return originalKey % this->hashFunctionDivisionValue;
 }
 
-void Map::addToLinkedList(int positionInHashTable, TKey elementKey, TValue elementValue){
+void Map::addToLinkedList(Node*& linkedListHead, TKey elementKey, TValue elementValue){
 	Node* newNode = new Node;
 	newNode->keyValuePair = std::make_pair(elementKey, elementValue);
-	newNode->nextNode = this->hashTable[positionInHashTable];
-	this->hashTable[positionInHashTable] = newNode;
+	newNode->nextNode = linkedListHead;
+	linkedListHead = newNode;
 }
 
 Node* Map::searchInLinkedList(int positionInHashTable, TKey searchedKey) const {
@@ -77,27 +78,65 @@ void Map::removeFromLinkedList(Node* positionBeforeKey){
 	positionBeforeKey->nextNode = nextNextNodeCopy;
 }
 
+bool Map::checkIfOverloaded(){
+	return (double)(this->numberOfPairs / this->numberOfPositions) >= HASH_LOAD_FACTOR;
+}
+
+void Map::resizeHashTable(){
+	Node** auxiliaryList = new Node* [this->numberOfPositions * MULTIPLYING_FACTOR];
+	MapIterator iter(*this);
+	int newPairKey;
+
+	for (int i = 0; i < this->numberOfPositions * MULTIPLYING_FACTOR; i++) {
+		auxiliaryList[i] = NULL;
+	}
+
+	this->hashFunctionDivisionValue *= MULTIPLYING_FACTOR; // this will change the hash function
+	while (iter.valid()) {
+		TElem currentPair = iter.getCurrent();
+		newPairKey = this->hashFunction(currentPair.first);
+		this->addToLinkedList(auxiliaryList[newPairKey], currentPair.first, currentPair.second);
+		iter.next();
+	}
+
+	Node* temporaryNode;
+	for (int i = 0; i < this->numberOfPositions; i++) {
+		while (this->hashTable[i] != NULL) {
+			temporaryNode = this->hashTable[i]->nextNode;
+			delete this->hashTable[i];
+			this->hashTable[i] = temporaryNode;
+		}
+	}
+	delete[] this->hashTable;
+	this->numberOfPositions *= MULTIPLYING_FACTOR;
+	this->hashTable = auxiliaryList;
+}
+
 TValue Map::add(TKey c, TValue v){
 	int positionInHashTable = this->hashFunction(c);
+	TValue previousValue = NULL_TVALUE;
 
 	if (this->hashTable[positionInHashTable] == NULL) {
-		this->addToLinkedList(positionInHashTable, c, v);
+		this->addToLinkedList(this->hashTable[positionInHashTable], c, v);
 		this->numberOfPairs++;
 	}
 	else {
 		Node* positionInLinkedList = this->searchInLinkedList(positionInHashTable, c);
 		if (positionInLinkedList == NULL) {
-			this->addToLinkedList(positionInHashTable, c, v);
+			this->addToLinkedList(this->hashTable[positionInHashTable], c, v);
 			this->numberOfPairs++;
 		}
 		else {
-			TValue previousValue = positionInLinkedList->keyValuePair.second;
+			previousValue = positionInLinkedList->keyValuePair.second;
 			positionInLinkedList->keyValuePair = std::make_pair(c, v); // update
-			return previousValue;
 		}
 	}
 
-	return NULL_TVALUE;
+	if (checkIfOverloaded() == true) {
+		this->resizeHashTable();
+	}
+
+	return previousValue;
 }
 
 TValue Map::search(TKey c) const{

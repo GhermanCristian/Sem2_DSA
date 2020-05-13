@@ -7,7 +7,6 @@ class MapIterator{
 
 	private:
 		const Map& map;
-
 		int positionInHashTable;
 		Node* positionInLinkedList;
 
