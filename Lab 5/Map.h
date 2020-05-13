@@ -38,6 +38,7 @@ class Map {
 		void resizeHashTable();
 		void deleteLinkedList(Node*& linkedListHead);
 		void deleteHashTable(Node**& hashTable, int numberOfPositions);
+		void independentHashTableCopy(const Map& originalMap);
 
 	public:
 		Map();
@@ -47,6 +48,8 @@ class Map {
 		int size() const;
 		bool isEmpty() const;
 		MapIterator iterator() const;
+		Map& operator = (const Map& originalMap);
+		Map(const Map& originalMap);
 		~Map();
 };
 

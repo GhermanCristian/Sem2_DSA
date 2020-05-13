@@ -76,19 +76,20 @@ bool Map::checkIfOverloaded(){
 
 void Map::resizeHashTable(){
 	Node** auxiliaryHashTable = new Node* [this->numberOfPositions * MULTIPLYING_FACTOR];
-	MapIterator iter(*this);
+	Node* currentNode;
 	int newPairKey;
 
+	this->hashFunctionDivisionValue *= MULTIPLYING_FACTOR; // this will change the hash function
 	for (int i = 0; i < this->numberOfPositions * MULTIPLYING_FACTOR; i++) {
 		auxiliaryHashTable[i] = NULL;
 	}
-
-	this->hashFunctionDivisionValue *= MULTIPLYING_FACTOR; // this will change the hash function
-	while (iter.valid()) {
-		TElem currentPair = iter.getCurrent();
-		newPairKey = this->hashFunction(currentPair.first);
-		this->addToLinkedList(auxiliaryHashTable[newPairKey], currentPair.first, currentPair.second);
-		iter.next();
+	for (int i = 0; i < this->numberOfPositions; i++) {
+		currentNode = this->hashTable[i];
+		while (currentNode != NULL) {
+			newPairKey = this->hashFunction(currentNode->keyValuePair.first);
+			this->addToLinkedList(auxiliaryHashTable[newPairKey], currentNode->keyValuePair.first, currentNode->keyValuePair.second);
+			currentNode = currentNode->nextNode;
+		}
 	}
 
 	deleteHashTable(this->hashTable, this->numberOfPositions);
@@ -110,6 +111,23 @@ void Map::deleteHashTable(Node**& hashTable, int numberOfPositions){
 		this->deleteLinkedList(hashTable[i]);
 	}
 	delete[] hashTable;
+}
+
+void Map::independentHashTableCopy(const Map& originalMap){
+	Node* currentNode;
+	int positionInHashTable;
+
+	this->deleteHashTable(this->hashTable, this->numberOfPositions);
+	this->hashTable = new Node * [originalMap.numberOfPositions];
+	for (int i = 0; i < originalMap.numberOfPositions; i++) {
+		this->hashTable[i] = NULL;
+		currentNode = originalMap.hashTable[i];
+		while (currentNode != NULL) {
+			positionInHashTable = originalMap.hashFunction(currentNode->keyValuePair.first); //we have to use the hash function from the original map
+			this->addToLinkedList(this->hashTable[positionInHashTable], currentNode->keyValuePair.first, currentNode->keyValuePair.second);
+			currentNode = currentNode->nextNode;
+		}
+	}
 }
 
 TValue Map::add(TKey c, TValue v){
@@ -188,6 +206,24 @@ bool Map::isEmpty() const{
 
 MapIterator Map::iterator() const {
 	return MapIterator(*this);
+}
+
+Map& Map::operator=(const Map& originalMap){
+	if (this != &originalMap) {
+		this->numberOfPairs = originalMap.numberOfPairs;
+		this->numberOfPositions = originalMap.numberOfPositions;
+		this->hashFunctionDivisionValue = originalMap.hashFunctionDivisionValue;
+		this->independentHashTableCopy(originalMap);
+	}
+
+	return *this;
+}
+
+Map::Map(const Map& originalMap){
+	this->numberOfPairs = originalMap.numberOfPairs;
+	this->numberOfPositions = originalMap.numberOfPositions;
+	this->hashFunctionDivisionValue = originalMap.hashFunctionDivisionValue;
+	this->independentHashTableCopy(originalMap);
 }
 
 
