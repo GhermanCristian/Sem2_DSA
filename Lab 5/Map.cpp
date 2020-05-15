@@ -10,7 +10,7 @@ Map::Map() {
 
 	this->numberOfPairs = 0;
 	this->numberOfPositions = INITIAL_HASH_TABLE_SIZE;
-	this->hashFunctionDivisionValue = INITIAL_HASH_TABLE_SIZE;
+	this->hashConstant = INITIAL_HASH_TABLE_SIZE;
 }
 
 Map::~Map() {
@@ -21,7 +21,7 @@ int Map::hashFunction(TKey originalKey) const {
 	if (originalKey < 0) {
 		originalKey = -originalKey;
 	}
-	return originalKey % this->hashFunctionDivisionValue;
+	return originalKey % this->hashConstant;
 }
 
 void Map::addToLinkedList(Node*& linkedListHead, TKey elementKey, TValue elementValue){
@@ -79,7 +79,7 @@ void Map::resizeHashTable(){
 	Node* currentNode;
 	int newPairKey;
 
-	this->hashFunctionDivisionValue *= MULTIPLYING_FACTOR; // this will change the hash function
+	this->hashConstant *= MULTIPLYING_FACTOR; // this will change the hash function
 	for (int i = 0; i < this->numberOfPositions * MULTIPLYING_FACTOR; i++) {
 		auxiliaryHashTable[i] = NULL;
 	}
@@ -120,9 +120,8 @@ void Map::deleteHashTable(Node**& hashTable, int numberOfPositions){
 	delete[] hashTable;
 }
 
-void Map::independentHashTableCopy(const Map& originalMap){
+void Map::copyHashTable(const Map& originalMap){
 	Node* currentNode;
-	int positionInHashTable;
 
 	// this should be done with the previous number of positions (hence why in the assignment operator it is called
 	// before changing it) - because if the number differs we might access unavailable memory
@@ -132,8 +131,7 @@ void Map::independentHashTableCopy(const Map& originalMap){
 		this->hashTable[i] = NULL;
 		currentNode = originalMap.hashTable[i];
 		while (currentNode != NULL) {
-			positionInHashTable = originalMap.hashFunction(currentNode->keyValuePair.first); //we have to use the hash function from the original map
-			this->addToLinkedList(this->hashTable[positionInHashTable], currentNode->keyValuePair.first, currentNode->keyValuePair.second);
+			this->addToLinkedList(this->hashTable[i], currentNode->keyValuePair.first, currentNode->keyValuePair.second);
 			currentNode = currentNode->nextNode;
 		}
 	}
@@ -225,10 +223,10 @@ Map& Map::operator=(const Map& originalMap){
 		// In this case, however, there already is a list, whose number of elements might differ from the new one
 		// in which case the deletion algorithm will try to access unavailable memory (because the number of
 		// positions has been updated - most probably increased - prior to the deletion
-		this->independentHashTableCopy(originalMap);
+		this->copyHashTable(originalMap);
 		this->numberOfPairs = originalMap.numberOfPairs;
 		this->numberOfPositions = originalMap.numberOfPositions;
-		this->hashFunctionDivisionValue = originalMap.hashFunctionDivisionValue;
+		this->hashConstant = originalMap.hashConstant;
 	}
 
 	return *this;
@@ -237,8 +235,8 @@ Map& Map::operator=(const Map& originalMap){
 Map::Map(const Map& originalMap){
 	this->numberOfPairs = originalMap.numberOfPairs;
 	this->numberOfPositions = originalMap.numberOfPositions;
-	this->hashFunctionDivisionValue = originalMap.hashFunctionDivisionValue;
-	this->independentHashTableCopy(originalMap);
+	this->hashConstant = originalMap.hashConstant;
+	this->copyHashTable(originalMap);
 }
 
 

@@ -25,7 +25,7 @@ class Map {
 	private:
 		int numberOfPairs;
 		int numberOfPositions;
-		int hashFunctionDivisionValue;
+		int hashConstant;
 		Node** hashTable; // this will store the "heads" of the linked lists
 
 		int hashFunction(TKey originalKey) const;
@@ -38,7 +38,7 @@ class Map {
 		void resizeHashTable();
 		void deleteLinkedList(Node*& linkedListHead);
 		void deleteHashTable(Node**& hashTable, int numberOfPositions);
-		void independentHashTableCopy(const Map& originalMap);
+		void copyHashTable(const Map& originalMap);
 
 	public:
 		Map();
