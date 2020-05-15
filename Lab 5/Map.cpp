@@ -45,13 +45,13 @@ Node* Map::searchInLinkedList(int positionInHashTable, TKey searchedKey) const {
 }
 
 Node* Map::getNodeBeforeKey(int positionInHashTable, TKey searchedKey) const {
-	Node* currentPosition = this->hashTable[positionInHashTable];
+	Node* currentNode = this->hashTable[positionInHashTable];
 
-	while (currentPosition->nextNode != NULL) {
-		if (currentPosition->nextNode->keyValuePair.first == searchedKey) {
-			return currentPosition;
+	while (currentNode->nextNode != NULL) {
+		if (currentNode->nextNode->keyValuePair.first == searchedKey) {
+			return currentNode;
 		}
-		currentPosition = currentPosition->nextNode;
+		currentNode = currentNode->nextNode;
 	}
 
 	return NULL;
