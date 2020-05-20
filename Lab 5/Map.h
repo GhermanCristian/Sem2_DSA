@@ -1,5 +1,6 @@
 #pragma once
 #include <utility>
+#include <vector>
 //DO NOT INCLUDE MAPITERATOR
 
 //DO NOT CHANGE THIS PART
@@ -265,6 +266,17 @@ class Map {
 				- The map we copy from
 			Output:
 				- A new object with the content of the originalMap is built
+		*/
+
+		std::vector <TKey> keySet() const;
+		/*
+			Returns a the set of all keys from the map
+			Complexity:
+				- BC/AC/WC: theta(n + m) (n = number of elements in the map, m = number of pos in the hash table)
+			Input:
+				- The map we iterate through
+			Output:
+				- The set of all keys in the map
 		*/
 
 		~Map();

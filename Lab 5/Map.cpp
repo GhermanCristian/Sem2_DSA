@@ -239,5 +239,19 @@ Map::Map(const Map& originalMap){
 	this->copyHashTable(originalMap);
 }
 
+std::vector<TKey> Map::keySet() const {
+	std::vector<TKey> mapKeys;
+
+	for (int i = 0; i < this->numberOfPositions; i++) {
+		Node* currentNode = this->hashTable[i];
+		while (currentNode != NULL) {
+			mapKeys.push_back(currentNode->keyValuePair.first);
+			currentNode = currentNode->nextNode;
+		}
+	}
+
+	return mapKeys;
+}
+
 
 

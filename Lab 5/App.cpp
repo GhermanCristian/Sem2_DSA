@@ -15,7 +15,7 @@ int main() {
 
 	_CrtDumpMemoryLeaks();
 
-	cout << "That's all!" << endl;
+	cout << endl << "That's all!" << endl;
 	system("pause");
 	return 0;
 }

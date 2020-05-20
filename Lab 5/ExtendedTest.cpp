@@ -265,7 +265,7 @@ void testQuantity() {
 
 void testCopyConstructorAndAssignmentOperator() {
 	Map m; 
-	cout << "Test copy constructor and assignment operator\n" << endl;
+	cout << "Test copy constructor and assignment operator\n";
 
 	for (int i = 0; i < 1000; i++) {
 		m.add(i, i);
@@ -298,6 +298,43 @@ void testCopyConstructorAndAssignmentOperator() {
 	}
 }
 
+void testKeySet() {
+	cout << "Test key set\n";
+
+	Map m;
+	for (int i = 1; i <= 10; i++) {
+		m.add(i, 2 * i);
+	}
+	std::vector <TKey> allKeys = m.keySet();
+	assert(allKeys.size() == 10);
+
+	int keySum = 0;
+	for (auto iter : allKeys) {
+		keySum += iter;
+	}
+	assert(keySum == 55);
+
+	for (int i = 1; i <= 10; i++) {
+		bool found = false;
+		for (auto iter : allKeys) {
+			if (iter == i) {
+				found = true;
+			}
+		}
+		assert(found);
+	}
+
+	Map m1;
+
+	allKeys = m1.keySet();
+	assert(allKeys.size() == 0);
+
+	m1.add(6, 7);
+	allKeys = m1.keySet();
+	assert(allKeys.size() == 1);
+	assert(allKeys[0] == 6);
+}
+
 void testAllExtended() {
 	testCreate();
 	testAdd();
@@ -305,6 +342,7 @@ void testAllExtended() {
 	testIterator();
 	testQuantity();
 	testCopyConstructorAndAssignmentOperator();
+	testKeySet();
 }
 
 
