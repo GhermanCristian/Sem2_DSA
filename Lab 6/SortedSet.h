@@ -8,11 +8,15 @@ typedef bool(*Relation)(TComp, TComp);
 #define NULL_TELEM -11111
 class SortedSetIterator;
 
+const int INITIAL_CAPACITY = 100;
+
 class SortedSet {
 	friend class SortedSetIterator;
 
 	private:
-		//TODO - Representation
+		int elementCount;
+		TComp* elements;
+		int arrayCapacity;
 
 	public:
 		//constructor
