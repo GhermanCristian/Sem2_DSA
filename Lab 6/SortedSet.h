@@ -8,7 +8,7 @@ typedef bool(*Relation)(TComp, TComp);
 #define NULL_TELEM -11111
 class SortedSetIterator;
 
-const int INITIAL_CAPACITY = 100;
+const int INITIAL_CAPACITY = 127; // 7 levels
 const int NONEXISTENT_POSITION = -1;
 
 class SortedSet {
@@ -18,11 +18,14 @@ class SortedSet {
 		int elementCount;
 		TComp* elements;
 		int arrayCapacity;
+		Relation currentRelation;
 
 		int findPositionOf(TComp elem) const;
 		void resizeArray();
 		void moveSubtree(int sourcePosition, int destPosition);
-		int getPositionOfMaximum(int rootPosition);
+		int getPositionOfMaximum(int rootPosition) const;
+		int getPositionOfMinimum(int rootPosition) const;
+		int getParentPosition(int childPosition) const;
 
 	public:
 		//constructor

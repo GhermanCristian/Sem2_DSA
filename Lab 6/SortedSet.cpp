@@ -8,6 +8,7 @@ SortedSet::SortedSet(Relation r) {
 	for (int i = 0; i < this->arrayCapacity; i++) {
 		this->elements[i] = NULL_TELEM;
 	}
+	this->currentRelation = r;
 }
 
 int SortedSet::findPositionOf(TComp elem) const {
@@ -20,12 +21,12 @@ int SortedSet::findPositionOf(TComp elem) const {
 		}
 
 		// left child (keep in mind that it's 0-indexed)
-		if (elem < this->elements[position] and position * 2 + 1 < this->arrayCapacity and this->elements[position * 2 + 1] != NULL_TELEM) {
+		if (currentRelation(elem, this->elements[position]) == true and position * 2 + 1 < this->arrayCapacity and this->elements[position * 2 + 1] != NULL_TELEM) {
 			position = position * 2 + 1;
 		}
 
 		// right child (keep in mind that it's 0-indexed)
-		else if (elem > this->elements[position] and position * 2 + 2 < this->arrayCapacity and this->elements[position * 2 + 2] != NULL_TELEM) {
+		else if (currentRelation(elem, this->elements[position]) == false and position * 2 + 2 < this->arrayCapacity and this->elements[position * 2 + 2] != NULL_TELEM) {
 			position = position * 2 + 2;
 		}
 
@@ -61,15 +62,30 @@ void SortedSet::moveSubtree(int sourcePosition, int destPosition){
 	}
 }
 
-int SortedSet::getPositionOfMaximum(int rootPosition){
+int SortedSet::getPositionOfMaximum(int rootPosition) const{
 	// the maximum element is determined by going "to the right" as much as possible
-	while (rootPosition < this->arrayCapacity) {
-		if (rootPosition * 2 + 2 < this->arrayCapacity and this->elements[rootPosition * 2 + 2] != NULL_TELEM) {
-			rootPosition = rootPosition * 2 + 2;
-		}
+	while (rootPosition * 2 + 2 < this->arrayCapacity and this->elements[rootPosition * 2 + 2] != NULL_TELEM) {
+		rootPosition = rootPosition * 2 + 2;
 	}
 
 	return rootPosition;
+}
+
+int SortedSet::getPositionOfMinimum(int rootPosition) const{
+	// the minimum element is determined by going "to the left" as much as possible
+	while (rootPosition * 2 + 1 < this->arrayCapacity and this->elements[rootPosition * 2 + 1] != NULL_TELEM) {
+		rootPosition = rootPosition * 2 + 1;
+	}
+
+	return rootPosition;
+}
+
+int SortedSet::getParentPosition(int childPosition) const{
+	// keep in mind this is 0-indexed
+	if (childPosition % 2 == 1) {
+		return childPosition / 2;
+	}
+	return (childPosition - 1) / 2;
 }
 
 bool SortedSet::add(TComp elem) {
@@ -87,17 +103,19 @@ bool SortedSet::add(TComp elem) {
 		}
 
 		// left child
-		if (elem < this->elements[position]/* and position * 2 + 1 < this->arrayCapacity*/) {
+		if (currentRelation(elem, this->elements[position]) == true/* and position * 2 + 1 < this->arrayCapacity*/) {
 			position = position * 2 + 1;
 		}
 		// right child
-		else if (elem > this->elements[position]/* and position * 2 + 2 < this->arrayCapacity*/) {
+		else if (currentRelation(elem, this->elements[position]) == false/* and position * 2 + 2 < this->arrayCapacity*/) {
 			position = position * 2 + 2;
 		}
 	}
 
 	// we've run out of valid positions in the array, so we have to resize
 	this->resizeArray();
+	this->elements[position] = elem;
+	this->elementCount++;
 
 	return true; 
 }
