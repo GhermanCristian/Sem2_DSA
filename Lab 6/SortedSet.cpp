@@ -10,6 +10,68 @@ SortedSet::SortedSet(Relation r) {
 	}
 }
 
+int SortedSet::findPositionOf(TComp elem) const {
+	int position = 0;
+
+	while (position < this->arrayCapacity) {
+		// checks if the root is the element we search for
+		if (elem == this->elements[position]) {
+			return position;
+		}
+
+		// left child (keep in mind that it's 0-indexed)
+		if (elem < this->elements[position] and position * 2 + 1 < this->arrayCapacity and this->elements[position * 2 + 1] != NULL_TELEM) {
+			position = position * 2 + 1;
+		}
+
+		// right child (keep in mind that it's 0-indexed)
+		else if (elem > this->elements[position] and position * 2 + 2 < this->arrayCapacity and this->elements[position * 2 + 2] != NULL_TELEM) {
+			position = position * 2 + 2;
+		}
+
+		else {
+			return NONEXISTENT_POSITION;
+		}
+	}
+
+	return NONEXISTENT_POSITION;
+}
+
+void SortedSet::resizeArray() {
+	TComp* auxArray = new TComp[this->arrayCapacity * 2 + 1];
+	for (int i = 0; i < this->arrayCapacity; i++) {
+		auxArray[i] = this->elements[i];
+	}
+
+	this->arrayCapacity = this->arrayCapacity * 2 + 1;
+	delete[] this->elements;
+	this->elements = auxArray;
+}
+
+void SortedSet::moveSubtree(int sourcePosition, int destPosition){
+	// I will assume the positions are valid and moving will not overwrite other parts of the tree
+	this->elements[destPosition] = this->elements[sourcePosition];
+	this->elements[sourcePosition] = NULL_TELEM;
+
+	if (sourcePosition * 2 + 1 < this->arrayCapacity and this->elements[sourcePosition * 2 + 1] != NULL_TELEM) {
+		moveSubtree(sourcePosition * 2 + 1, destPosition * 2 + 1);
+	}
+	if (sourcePosition * 2 + 2 < this->arrayCapacity and this->elements[sourcePosition * 2 + 2] != NULL_TELEM) {
+		moveSubtree(sourcePosition * 2 + 2, destPosition * 2 + 2);
+	}
+}
+
+int SortedSet::getPositionOfMaximum(int rootPosition){
+	// the maximum element is determined by going "to the right" as much as possible
+	while (rootPosition < this->arrayCapacity) {
+		if (rootPosition * 2 + 2 < this->arrayCapacity and this->elements[rootPosition * 2 + 2] != NULL_TELEM) {
+			rootPosition = rootPosition * 2 + 2;
+		}
+	}
+
+	return rootPosition;
+}
+
 bool SortedSet::add(TComp elem) {
 	int position = 0;
 
@@ -34,38 +96,56 @@ bool SortedSet::add(TComp elem) {
 		}
 	}
 
-	// somewhere around here there should be a resize
-	return false; // we've run out of valid positions in the array
+	// we've run out of valid positions in the array, so we have to resize
+	this->resizeArray();
+
+	return true; 
 }
 
 bool SortedSet::remove(TComp elem) {
-	//TODO - Implementation
-	return false;
+	int position = this->findPositionOf(elem);
+	int successorCount = 0;
+	int childPosition;
+
+	if (position == NONEXISTENT_POSITION) {
+		return false;
+	}
+
+	if (position * 2 + 1 < this->arrayCapacity and this->elements[position * 2 + 1] != NULL_TELEM) {
+		successorCount++;
+		childPosition = position * 2 + 1;
+	}
+	if (position * 2 + 2 < this->arrayCapacity and this->elements[position * 2 + 2] != NULL_TELEM) {
+		successorCount++;
+		childPosition = position * 2 + 2; 
+		// in the case with 1 successor, only one of these positions will be the child's position (so either left or right)
+	}
+
+	if (successorCount == 0) {
+		this->elements[position] = NULL_TELEM;
+	}
+	else if (successorCount == 1) {
+		this->moveSubtree(childPosition, position);
+	}
+	else {
+		// we move the maximum element in this subtree to the current position
+		// because it's the max elem, it can have at most 1 successor (one smaller than it => left subtree)
+		int maximumPosition = this->getPositionOfMaximum(position);
+		this->elements[position] = maximumPosition;
+		this->elements[maximumPosition] = NULL_TELEM;
+
+		// if it has a left subtree, we move it in the position which previously belonged to the maximum
+		if (maximumPosition * 2 + 1 < this->arrayCapacity and this->elements[maximumPosition * 2 + 1] != NULL_TELEM) {
+			this->moveSubtree(maximumPosition * 2 + 1, maximumPosition);
+		}
+	}
+
+	this->elementCount--;
+	return true;
 }
 
 bool SortedSet::search(TComp elem) const {
-	int position = 0;
-
-	while (position < this->arrayCapacity) {
-		// checks if the root is the element we search for
-		if (elem == this->elements[position]) {
-			return true;
-		}
-
-		// left child (keep in mind that it's 0-indexed)
-		if (elem < this->elements[position] and position * 2 + 1 < this->arrayCapacity and this->elements[position * 2 + 1] != NULL_TELEM) {
-			position = position * 2 + 1;
-		}
-
-		// right child (keep in mind that it's 0-indexed)
-		else if (elem > this->elements[position] and position * 2 + 2 < this->arrayCapacity and this->elements[position * 2 + 2] != NULL_TELEM) {
-			position = position * 2 + 2;
-		}
-
-		else {
-			return false;
-		}
-	}
+	return (this->findPositionOf(elem) != NONEXISTENT_POSITION);
 }
 
 int SortedSet::size() const {
@@ -79,7 +159,6 @@ bool SortedSet::isEmpty() const {
 SortedSetIterator SortedSet::iterator() const {
 	return SortedSetIterator(*this);
 }
-
 
 SortedSet::~SortedSet() {
 	delete[] this->elements;

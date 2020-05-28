@@ -9,6 +9,7 @@ typedef bool(*Relation)(TComp, TComp);
 class SortedSetIterator;
 
 const int INITIAL_CAPACITY = 100;
+const int NONEXISTENT_POSITION = -1;
 
 class SortedSet {
 	friend class SortedSetIterator;
@@ -17,6 +18,11 @@ class SortedSet {
 		int elementCount;
 		TComp* elements;
 		int arrayCapacity;
+
+		int findPositionOf(TComp elem) const;
+		void resizeArray();
+		void moveSubtree(int sourcePosition, int destPosition);
+		int getPositionOfMaximum(int rootPosition);
 
 	public:
 		//constructor
