@@ -72,17 +72,25 @@ void SortedSet::resizeArray(){
 	;
 }
 
-bool SortedSet::isLeftChild(int position){
+bool SortedSet::isLeftChild(int position) const {
 	return (position != this->rootPosition and this->elements[this->elements[position].parent].left == position);
 }
 
-bool SortedSet::isRightChild(int position){
+bool SortedSet::isRightChild(int position) const {
 	return (position != this->rootPosition and this->elements[this->elements[position].parent].right == position);
 }
 
-int SortedSet::getPositionOfMaximum(int rootPosition){
-	while (rootPosition < this->arrayCapacity and this->elements[rootPosition].right != NULL_TELEM) {
+int SortedSet::getPositionOfMaximum(int rootPosition) const {
+	while (rootPosition < this->arrayCapacity and this->elements[rootPosition].right != NONEXISTENT_POSITION) {
 		rootPosition = this->elements[rootPosition].right;
+	}
+
+	return rootPosition;
+}
+
+int SortedSet::getPositionOfMinimum(int rootPosition) const {
+	while (rootPosition < this->arrayCapacity and this->elements[rootPosition].left != NONEXISTENT_POSITION) {
+		rootPosition = this->elements[rootPosition].left;
 	}
 
 	return rootPosition;
@@ -96,8 +104,7 @@ void SortedSet::updateNextEmpty(int position){
 
 void SortedSet::removeNoSuccessors(int position){
 	this->updateNextEmpty(position);
-	this->elements[position] = NULL_NODE;
-
+	
 	if (this->isLeftChild(position) == true) {
 		this->elements[this->elements[position].parent].left = NONEXISTENT_POSITION;
 	}
@@ -112,6 +119,8 @@ void SortedSet::removeNoSuccessors(int position){
 	else {
 		this->rootPosition = NONEXISTENT_POSITION;
 	}
+
+	this->elements[position] = NULL_NODE;
 }
 
 void SortedSet::removeOneSuccessor(int position, bool hasLeftChild){
@@ -120,9 +129,11 @@ void SortedSet::removeOneSuccessor(int position, bool hasLeftChild){
 	if (this->isLeftChild(position) == true) {
 		if (hasLeftChild == true) {
 			this->elements[this->elements[position].parent].left = this->elements[position].left;
+			this->elements[this->elements[position].left].parent = this->elements[position].parent;
 		}
 		else { // has a right child
 			this->elements[this->elements[position].parent].left = this->elements[position].right;
+			this->elements[this->elements[position].right].parent = this->elements[position].parent;
 		}
 	}
 	// we don't just do 'else' here because if this is a root => isLeftChild will return false
@@ -130,9 +141,11 @@ void SortedSet::removeOneSuccessor(int position, bool hasLeftChild){
 	else if (this->isRightChild(position) == true) {
 		if (hasLeftChild == true) {
 			this->elements[this->elements[position].parent].right = this->elements[position].left;
+			this->elements[this->elements[position].left].parent = this->elements[position].parent;
 		}
 		else { // has a right child
 			this->elements[this->elements[position].parent].right = this->elements[position].right;
+			this->elements[this->elements[position].right].parent = this->elements[position].parent;
 		}
 	}
 
@@ -140,13 +153,16 @@ void SortedSet::removeOneSuccessor(int position, bool hasLeftChild){
 		// it has one child, which will become the new root
 		if (hasLeftChild == true) {
 			this->rootPosition = this->elements[this->rootPosition].left;
+			this->elements[this->elements[this->rootPosition].left].parent = NONEXISTENT_POSITION;
 		}
 		else {
 			this->rootPosition = this->elements[this->rootPosition].right;
+			this->elements[this->elements[this->rootPosition].right].parent = NONEXISTENT_POSITION;
 		}
 
-		this->elements[position] = NULL_NODE; // position = the old root position
 	}
+
+	this->elements[position] = NULL_NODE;
 }
 
 void SortedSet::removeTwoSuccessors(int position){
@@ -155,6 +171,12 @@ void SortedSet::removeTwoSuccessors(int position){
 	this->elements[position] = this->elements[positionOfMaximum];
 
 	this->updateNextEmpty(positionOfMaximum);
+	if (this->isLeftChild(positionOfMaximum) == true) {
+		this->elements[this->elements[positionOfMaximum].parent].left = NONEXISTENT_POSITION;
+	}
+	else if (this->isRightChild(positionOfMaximum) == true) {
+		this->elements[this->elements[positionOfMaximum].parent].right = NONEXISTENT_POSITION;
+	}
 	this->elements[positionOfMaximum] = NULL_NODE;
 }
 

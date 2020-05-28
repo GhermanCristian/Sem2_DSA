@@ -34,9 +34,10 @@ class SortedSet {
 		int findPositionOf(TComp elem) const;
 		void addNewNode(TComp elem, int position, bool isLeftChild, int parentPosition);
 		void resizeArray();
-		bool isLeftChild(int position);
-		bool isRightChild(int position);
-		int getPositionOfMaximum(int rootPosition);
+		bool isLeftChild(int position) const;
+		bool isRightChild(int position) const;
+		int getPositionOfMaximum(int rootPosition) const;
+		int getPositionOfMinimum(int rootPosition) const;
 		void updateNextEmpty(int position);
 		void removeNoSuccessors(int position);
 		void removeOneSuccessor(int position, bool hasLeftChild);
