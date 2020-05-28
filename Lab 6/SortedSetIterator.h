@@ -8,7 +8,7 @@ class SortedSetIterator{
 		const SortedSet& multime;
 		SortedSetIterator(const SortedSet& m);
 
-		int positionInArray;
+		//TODO - Representation
 
 	public:
 		void first();
