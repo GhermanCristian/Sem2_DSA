@@ -148,7 +148,6 @@ void testAdd() {
 	assert(s.size() == 20000);
 }
 
-
 void testRemove(Relation r) {
 	cout << "Test remove" << endl;
 	SortedSet s(r);
@@ -170,8 +169,13 @@ void testRemove(Relation r) {
 		testIteratorSteps(s, r);
 	}
 	assert(s.size() == 0);
+	//s.testempty();
 
 	for (int i = -100; i <= 100; i = i + 2) { 
+		if (i == 100) {
+			int x = 1;
+			x++;
+		}
 		s.add(i);
 	}
 

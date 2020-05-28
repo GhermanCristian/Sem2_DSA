@@ -44,6 +44,7 @@ class SortedSet {
 		void removeTwoSuccessors(int position);
 
 	public:
+		void testempty();
 		//constructor
 		SortedSet(Relation r);
 

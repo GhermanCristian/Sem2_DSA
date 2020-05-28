@@ -1,5 +1,6 @@
 #include "SortedSet.h"
 #include "SortedSetIterator.h"
+#include <iostream>
 
 SortedSet::SortedSet(Relation r) {
 	this->arrayCapacity = INITIAL_CAPACITY;
@@ -13,8 +14,8 @@ SortedSet::SortedSet(Relation r) {
 	this->relation = r;
 	this->rootPosition = 0;
 
-	// the root will be placed on position 0 => the first empty position is 1 = nextEmpty[0]
-	this->firstEmpty = 0;
+	// the root will be placed on position 0 => the first empty position is 1
+	this->firstEmpty = 1;
 	this->nextEmpty[this->arrayCapacity - 1] = NONEXISTENT_POSITION;
 }
 
@@ -69,7 +70,24 @@ void SortedSet::addNewNode(TComp elem, int position, bool isLeftChild, int paren
 }
 
 void SortedSet::resizeArray(){
-	;
+	Node* auxArray = new Node[2 * this->arrayCapacity + 1];
+	int* auxEmpty = new int[2 * this->arrayCapacity + 1];
+	for (int i = 0; i < this->arrayCapacity; i++) {
+		auxArray[i] = this->elements[i];
+		auxEmpty[i] = this->nextEmpty[i];
+	}
+	delete[] this->elements;
+	delete[] this->nextEmpty;
+	this->elements = auxArray;
+	this->nextEmpty = auxEmpty;
+
+	this->nextEmpty[this->arrayCapacity - 1] = this->arrayCapacity;
+	for (int i = this->arrayCapacity; i < 2 * this->arrayCapacity + 1; i++) {
+		this->elements[i] = NULL_NODE;
+		this->nextEmpty[i] = i + 1;
+	}
+	this->nextEmpty[2 * this->arrayCapacity] = NONEXISTENT_POSITION;
+	this->arrayCapacity = 2 * this->arrayCapacity + 1;
 }
 
 bool SortedSet::isLeftChild(int position) const {
@@ -97,9 +115,8 @@ int SortedSet::getPositionOfMinimum(int rootPosition) const {
 }
 
 void SortedSet::updateNextEmpty(int position){
-	int auxFirstEmpty = this->firstEmpty;
+	this->nextEmpty[position] = this->firstEmpty;
 	this->firstEmpty = position;
-	this->nextEmpty[this->firstEmpty] = auxFirstEmpty;
 }
 
 void SortedSet::removeNoSuccessors(int position){
@@ -180,11 +197,28 @@ void SortedSet::removeTwoSuccessors(int position){
 	this->elements[positionOfMaximum] = NULL_NODE;
 }
 
+void SortedSet::testempty(){
+	/*for (int i = 0; i < this->arrayCapacity; i++) {
+		std::cout << this->nextEmpty[i] << "\n";
+	}*/
+
+	int x = this->firstEmpty;
+	while (this->nextEmpty[x] != NONEXISTENT_POSITION) {
+		x = this->nextEmpty[x];
+		std::cout << x << "\n";
+	}
+}
+
 bool SortedSet::add(TComp elem) {
 	int position = this->rootPosition;
 	int parentPosition = NONEXISTENT_POSITION;
 	int temporaryPosition;
 	bool isLeftChild = false; // if this is false => right child
+
+	if (this->rootPosition == NONEXISTENT_POSITION) {
+		this->addNewNode(elem, 0, isLeftChild, NONEXISTENT_POSITION);
+		return true;
+	}
 
 	while (position < this->arrayCapacity) {
 		if (this->elements[position].info == NULL_TELEM) {
@@ -208,9 +242,10 @@ bool SortedSet::add(TComp elem) {
 
 		if (position == NONEXISTENT_POSITION) {
 			if (this->firstEmpty == NONEXISTENT_POSITION) {
-				; // need to resize
+				this->firstEmpty = this->arrayCapacity - 1;
+				this->resizeArray();
 			}
-			position = this->nextEmpty[this->firstEmpty];
+			position = this->firstEmpty;
 			this->firstEmpty = this->nextEmpty[this->firstEmpty];
 			// the value for this element will be set in the next iteration of the while loop
 			// (which would've changed the parentPosition, although it's still that previous parent)
@@ -219,6 +254,8 @@ bool SortedSet::add(TComp elem) {
 		else {
 			parentPosition = position;
 		}
+
+		//std::cout << position << "\n";
 	}
 
 	// we've run out of valid positions in the array, so we have to resize
@@ -236,6 +273,9 @@ bool SortedSet::remove(TComp elem) {
 	if (position == NONEXISTENT_POSITION) {
 		return false; // element doesn't exist
 	}
+
+	//std::cout << "removed elem: " << elem << "\n";
+	//testempty();
 
 	if (this->elements[position].left != NONEXISTENT_POSITION) {
 		successorCount++;
