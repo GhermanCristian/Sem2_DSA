@@ -65,5 +65,4 @@ void testAll() {
 		it.next();
 	}
 	assert((vverif[0] == -3) && (vverif[1] == 5) && (vverif[2] == 7) && (vverif[3] == 10));
-
 }

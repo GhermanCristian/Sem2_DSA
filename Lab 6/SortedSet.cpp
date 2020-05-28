@@ -20,6 +20,11 @@ SortedSet::SortedSet(Relation r) {
 
 int SortedSet::findPositionOf(TComp elem) const {
 	int position = this->rootPosition;
+
+	if (this->rootPosition == NONEXISTENT_POSITION) { // the set is empty
+		return NONEXISTENT_POSITION;
+	}
+
 	while (position < this->arrayCapacity and this->elements[position].info != NULL_TELEM) {
 		if (this->elements[position].info == elem) {
 			return position;
@@ -65,6 +70,92 @@ void SortedSet::addNewNode(TComp elem, int position, bool isLeftChild, int paren
 
 void SortedSet::resizeArray(){
 	;
+}
+
+bool SortedSet::isLeftChild(int position){
+	return (position != this->rootPosition and this->elements[this->elements[position].parent].left == position);
+}
+
+bool SortedSet::isRightChild(int position){
+	return (position != this->rootPosition and this->elements[this->elements[position].parent].right == position);
+}
+
+int SortedSet::getPositionOfMaximum(int rootPosition){
+	while (rootPosition < this->arrayCapacity and this->elements[rootPosition].right != NULL_TELEM) {
+		rootPosition = this->elements[rootPosition].right;
+	}
+
+	return rootPosition;
+}
+
+void SortedSet::updateNextEmpty(int position){
+	int auxFirstEmpty = this->firstEmpty;
+	this->firstEmpty = position;
+	this->nextEmpty[this->firstEmpty] = auxFirstEmpty;
+}
+
+void SortedSet::removeNoSuccessors(int position){
+	this->updateNextEmpty(position);
+	this->elements[position] = NULL_NODE;
+
+	if (this->isLeftChild(position) == true) {
+		this->elements[this->elements[position].parent].left = NONEXISTENT_POSITION;
+	}
+	// we don't just do 'else' here because if this is a root => isLeftChild is false => it would have entered
+	// this block, despite not being a right child
+	else if (this->isRightChild(position) == true) {
+		this->elements[this->elements[position].parent].right = NONEXISTENT_POSITION;
+	}
+
+	// if it's a root, it suffices to just delete the node (because in this case it also doesn't have any successors,
+	// so there are no links to maintain)
+	else {
+		this->rootPosition = NONEXISTENT_POSITION;
+	}
+}
+
+void SortedSet::removeOneSuccessor(int position, bool hasLeftChild){
+	this->updateNextEmpty(position);
+
+	if (this->isLeftChild(position) == true) {
+		if (hasLeftChild == true) {
+			this->elements[this->elements[position].parent].left = this->elements[position].left;
+		}
+		else { // has a right child
+			this->elements[this->elements[position].parent].left = this->elements[position].right;
+		}
+	}
+	// we don't just do 'else' here because if this is a root => isLeftChild will return false
+	// => will enter this block, although it's not a right child)
+	else if (this->isRightChild(position) == true) {
+		if (hasLeftChild == true) {
+			this->elements[this->elements[position].parent].right = this->elements[position].left;
+		}
+		else { // has a right child
+			this->elements[this->elements[position].parent].right = this->elements[position].right;
+		}
+	}
+
+	else { // root
+		// it has one child, which will become the new root
+		if (hasLeftChild == true) {
+			this->rootPosition = this->elements[this->rootPosition].left;
+		}
+		else {
+			this->rootPosition = this->elements[this->rootPosition].right;
+		}
+
+		this->elements[position] = NULL_NODE; // position = the old root position
+	}
+}
+
+void SortedSet::removeTwoSuccessors(int position){
+	// we know that both left/right children exist (because there are 2 successors)
+	int positionOfMaximum = this->getPositionOfMaximum(this->elements[position].left);
+	this->elements[position] = this->elements[positionOfMaximum];
+
+	this->updateNextEmpty(positionOfMaximum);
+	this->elements[positionOfMaximum] = NULL_NODE;
 }
 
 bool SortedSet::add(TComp elem) {
@@ -116,8 +207,34 @@ bool SortedSet::add(TComp elem) {
 }
 
 bool SortedSet::remove(TComp elem) {
-	//TODO - Implementation
-	return false;
+	int position = this->findPositionOf(elem);
+	int successorCount = 0;
+	bool hasLeftChild = false;
+
+	if (position == NONEXISTENT_POSITION) {
+		return false; // element doesn't exist
+	}
+
+	if (this->elements[position].left != NONEXISTENT_POSITION) {
+		successorCount++;
+		hasLeftChild = true;
+	}
+	if (this->elements[position].right != NONEXISTENT_POSITION) {
+		successorCount++;
+	}
+
+	if (successorCount == 0) {
+		this->removeNoSuccessors(position);
+	}
+	else if (successorCount == 1) {
+		this->removeOneSuccessor(position, hasLeftChild);
+	}
+	else {
+		this->removeTwoSuccessors(position);
+	}
+
+	this->elementCount--;
+	return true;
 }
 
 bool SortedSet::search(TComp elem) const {
@@ -136,7 +253,7 @@ SortedSetIterator SortedSet::iterator() const {
 	return SortedSetIterator(*this);
 }
 
-
 SortedSet::~SortedSet() {
-	//TODO - Implementation
+	delete[] this->elements;
+	delete[] this->nextEmpty;
 }
