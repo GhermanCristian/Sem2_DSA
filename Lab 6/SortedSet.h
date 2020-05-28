@@ -8,11 +8,32 @@ typedef bool(*Relation)(TComp, TComp);
 #define NULL_TELEM -11111
 class SortedSetIterator;
 
+const int INITIAL_CAPACITY = 127; // 7 levels
+const int NONEXISTENT_POSITION = -1;
+
+struct Node {
+	TComp info;
+	int left;
+	int right;
+	int parent;
+};
+const Node NULL_NODE = { NULL_TELEM, NONEXISTENT_POSITION, NONEXISTENT_POSITION, NONEXISTENT_POSITION }; // it should be NULL_TCOMP but I don't have that
+
 class SortedSet {
 	friend class SortedSetIterator;
 
 	private:
-		//TODO - Representation
+		Node* elements;
+		int elementCount;
+		int arrayCapacity;
+		Relation relation;
+		int rootPosition;
+		int* nextEmpty;
+		int firstEmpty; // index of the first empty position (used in nextEmpty)
+
+		int findPositionOf(TComp elem) const;
+		void addNewNode(TComp elem, int position, bool isLeftChild, int parentPosition);
+		void resizeArray();
 
 	public:
 		//constructor

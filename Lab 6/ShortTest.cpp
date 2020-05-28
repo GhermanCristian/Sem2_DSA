@@ -12,7 +12,6 @@ bool r2(TComp e1, TComp e2) {
 	}
 }
 
-
 void testAll() { 
 	int vverif[5];
 	int iverif;
@@ -35,7 +34,6 @@ void testAll() {
 		it1.next();
 	}
 	assert((vverif[0] == 1) && (vverif[1] == 5) && (vverif[2] == 10));
-
 
 	SortedSet s(r2);
 	assert(s.isEmpty() == true);
@@ -69,4 +67,3 @@ void testAll() {
 	assert((vverif[0] == -3) && (vverif[1] == 5) && (vverif[2] == 7) && (vverif[3] == 10));
 
 }
-
