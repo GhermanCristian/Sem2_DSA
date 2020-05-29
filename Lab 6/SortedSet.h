@@ -9,6 +9,7 @@ typedef bool(*Relation)(TComp, TComp);
 class SortedSetIterator;
 
 const int INITIAL_CAPACITY = 127; // 7 levels
+//const int INITIAL_CAPACITY = 8191; // 7 levels
 const int NONEXISTENT_POSITION = -1;
 
 struct Node {
@@ -42,6 +43,7 @@ class SortedSet {
 		void removeNoSuccessors(int position);
 		void removeOneSuccessor(int position, bool hasLeftChild);
 		void removeTwoSuccessors(int position);
+		void resetEmpty();
 
 	public:
 		void testempty();
