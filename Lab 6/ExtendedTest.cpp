@@ -76,7 +76,6 @@ void testCreate(Relation r) {
 	}
 }
 
-
 void testAdd() {
 	cout << "Test add" << endl;
 	int vverif[10];
@@ -169,13 +168,8 @@ void testRemove(Relation r) {
 		testIteratorSteps(s, r);
 	}
 	assert(s.size() == 0);
-	//s.testempty();
 
 	for (int i = -100; i <= 100; i = i + 2) { 
-		if (i == 100) {
-			int x = 1;
-			x++;
-		}
 		s.add(i);
 	}
 
@@ -213,9 +207,7 @@ void testRemove(Relation r) {
 		testIteratorSteps(s, r);
 	}
 	assert(s.size() == 0);
-
 }
-
 
 void testIterator(Relation r) {
 	cout << "Test iterator" << endl;
@@ -285,8 +277,6 @@ void testIterator(Relation r) {
 	assert(count == 50);
 }
 
-
-
 void testQuantity(Relation r) {
 	cout << "Test quantity" << endl;
 	SortedSet s(r);
@@ -295,6 +285,7 @@ void testQuantity(Relation r) {
 			s.add(j);
 		}
 	}
+
 	assert(s.size() == 6000);
 	SortedSetIterator it = s.iterator();
 	assert(it.valid() == true);
@@ -318,7 +309,6 @@ void testQuantity(Relation r) {
 
 
 void testAllExtended() {
-
 	testCreate(rLessEqual);
 	testAdd();
 	testRemove(rLessEqual);
@@ -327,6 +317,5 @@ void testAllExtended() {
 	testIterator(rGreater);
 	testQuantity(rLessEqual);
 	testQuantity(rGreater);
-
 }
 
