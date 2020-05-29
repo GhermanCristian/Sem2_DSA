@@ -69,7 +69,7 @@ void SortedSet::addNewNode(TComp elem, int position, bool isLeftChild, int paren
 	}
 }
 
-void SortedSet::resizeArray(){
+void SortedSet::resizeArrays(){
 	Node* auxArray = new Node[2 * this->arrayCapacity + 1];
 	int* auxEmpty = new int[2 * this->arrayCapacity + 1];
 	for (int i = 0; i < this->arrayCapacity; i++) {
@@ -115,13 +115,13 @@ int SortedSet::getPositionOfMinimum(int rootPosition) const {
 	return rootPosition;
 }
 
-void SortedSet::updateNextEmpty(int position){
+void SortedSet::addToNextEmpty(int position){
 	this->nextEmpty[position] = this->firstEmpty;
 	this->firstEmpty = position;
 }
 
-void SortedSet::removeNoSuccessors(int position){
-	this->updateNextEmpty(position);
+void SortedSet::removeWithNoSuccessors(int position){
+	this->addToNextEmpty(position);
 	
 	if (this->isLeftChild(position) == true) {
 		this->elements[this->elements[position].parent].left = NONEXISTENT_POSITION;
@@ -141,8 +141,8 @@ void SortedSet::removeNoSuccessors(int position){
 	this->elements[position] = NULL_NODE;
 }
 
-void SortedSet::removeOneSuccessor(int position, bool hasLeftChild){
-	this->updateNextEmpty(position);
+void SortedSet::removeWithOneSuccessor(int position, bool hasLeftChild){
+	this->addToNextEmpty(position);
 
 	if (this->isLeftChild(position) == true) {
 		if (hasLeftChild == true) {
@@ -183,12 +183,12 @@ void SortedSet::removeOneSuccessor(int position, bool hasLeftChild){
 	this->elements[position] = NULL_NODE;
 }
 
-void SortedSet::removeTwoSuccessors(int position){
+void SortedSet::removeWithTwoSuccessors(int position){
 	// we know that both left/right children exist (because there are 2 successors)
 	int positionOfMaximum = this->getPositionOfMaximum(this->elements[position].left);
 	this->elements[position] = this->elements[positionOfMaximum];
 
-	this->updateNextEmpty(positionOfMaximum);
+	this->addToNextEmpty(positionOfMaximum);
 	if (this->isLeftChild(positionOfMaximum) == true) {
 		this->elements[this->elements[positionOfMaximum].parent].left = NONEXISTENT_POSITION;
 	}
@@ -259,7 +259,7 @@ bool SortedSet::add(TComp elem) {
 		if (position == NONEXISTENT_POSITION) {
 			if (this->firstEmpty == NONEXISTENT_POSITION) { // array is full
 				position = this->arrayCapacity;
-				this->resizeArray();
+				this->resizeArrays();
 				this->firstEmpty = position + 1; // = prev capacity + 1 = nextEmpty[ previous capacity ] 
 			}
 			else {
@@ -290,13 +290,13 @@ bool SortedSet::remove(TComp elem) {
 	}
 
 	if (successorCount == 0) {
-		this->removeNoSuccessors(position);
+		this->removeWithNoSuccessors(position);
 	}
 	else if (successorCount == 1) {
-		this->removeOneSuccessor(position, hasLeftChild);
+		this->removeWithOneSuccessor(position, hasLeftChild);
 	}
 	else {
-		this->removeTwoSuccessors(position);
+		this->removeWithTwoSuccessors(position);
 	}
 
 	this->elementCount--;

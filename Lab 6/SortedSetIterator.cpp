@@ -13,12 +13,11 @@ void SortedSetIterator::first() {
 
 	if (this->position == NONEXISTENT_POSITION) { // if the set is empty => no sense in having an iterator
 		this->position = this->multime.arrayCapacity; // makes the position invalid
+		return;
 	}
 
-	// we go to the left as much as we can, in order to find the minimum value
-	while (this->position < this->multime.arrayCapacity and this->multime.elements[this->position].left != NONEXISTENT_POSITION) {
-		this->position = this->multime.elements[this->position].left;
-	}
+	// the first position is the one of the minimum of the set
+	this->position = this->multime.getPositionOfMinimum(this->position);
 }
 
 void SortedSetIterator::next() {
