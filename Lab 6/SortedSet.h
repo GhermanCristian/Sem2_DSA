@@ -44,6 +44,7 @@ class SortedSet {
 		void removeOneSuccessor(int position, bool hasLeftChild);
 		void removeTwoSuccessors(int position);
 		void resetEmpty();
+		void independentListsCopy(const SortedSet& originalSet);
 
 	public:
 		//constructor
@@ -69,6 +70,9 @@ class SortedSet {
 
 		//returns an iterator for the sorted set
 		SortedSetIterator iterator() const;
+
+		SortedSet(const SortedSet& originalSet);
+		SortedSet& operator = (const SortedSet& originalSet);
 
 		// destructor
 		~SortedSet();

@@ -206,6 +206,25 @@ void SortedSet::resetEmpty(){
 	this->firstEmpty = 1;
 }
 
+void SortedSet::independentListsCopy(const SortedSet& originalSet){
+	if (this == &originalSet) {
+		return;
+	}
+
+	if (this->arrayCapacity != originalSet.arrayCapacity) {
+		delete[] this->elements;
+		delete[] this->nextEmpty;
+
+		this->elements = new Node[originalSet.arrayCapacity];
+		this->nextEmpty = new int[originalSet.arrayCapacity];
+	}
+
+	for (int i = 0; i < originalSet.arrayCapacity; i++) {
+		this->elements[i] = originalSet.elements[i];
+		this->nextEmpty[i] = originalSet.nextEmpty[i];
+	}
+}
+
 bool SortedSet::add(TComp elem) {
 	int position = this->rootPosition;
 	int parentPosition = NONEXISTENT_POSITION;
@@ -298,6 +317,28 @@ bool SortedSet::isEmpty() const {
 
 SortedSetIterator SortedSet::iterator() const {
 	return SortedSetIterator(*this);
+}
+
+SortedSet::SortedSet(const SortedSet& originalSet){
+	this->elementCount = originalSet.elementCount;
+	this->arrayCapacity = originalSet.arrayCapacity;
+	this->firstEmpty = originalSet.firstEmpty;
+	this->rootPosition = originalSet.rootPosition;
+	this->relation = originalSet.relation;
+	this->independentListsCopy(originalSet);
+}
+
+SortedSet& SortedSet::operator=(const SortedSet& originalSet){
+	if (this != &originalSet) {
+		this->elementCount = originalSet.elementCount;
+		this->arrayCapacity = originalSet.arrayCapacity;
+		this->firstEmpty = originalSet.firstEmpty;
+		this->rootPosition = originalSet.rootPosition;
+		this->relation = originalSet.relation;
+		this->independentListsCopy(originalSet);
+	}
+
+	return *this;
 }
 
 SortedSet::~SortedSet() {
