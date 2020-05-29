@@ -46,7 +46,6 @@ class SortedSet {
 		void resetEmpty();
 
 	public:
-		void testempty();
 		//constructor
 		SortedSet(Relation r);
 

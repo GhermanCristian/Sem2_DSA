@@ -92,11 +92,11 @@ void SortedSet::resizeArray(){
 }
 
 bool SortedSet::isLeftChild(int position) const {
-	return (position != this->rootPosition and this->elements[this->elements[position].parent].left == position);
+	return (position != NONEXISTENT_POSITION and position != this->rootPosition and this->elements[this->elements[position].parent].left == position);
 }
 
 bool SortedSet::isRightChild(int position) const {
-	return (position != this->rootPosition and this->elements[this->elements[position].parent].right == position);
+	return (position != NONEXISTENT_POSITION and position != this->rootPosition and this->elements[this->elements[position].parent].right == position);
 }
 
 int SortedSet::getPositionOfMaximum(int rootPosition) const {
@@ -169,13 +169,14 @@ void SortedSet::removeOneSuccessor(int position, bool hasLeftChild){
 
 	else { // root
 		// it has one child, which will become the new root
+		int rootCopy = this->rootPosition;
 		if (hasLeftChild == true) {
-			this->rootPosition = this->elements[this->rootPosition].left;
-			this->elements[this->elements[this->rootPosition].left].parent = NONEXISTENT_POSITION;
+			this->rootPosition = this->elements[rootCopy].left;
+			this->elements[this->elements[rootCopy].left].parent = NONEXISTENT_POSITION;
 		}
 		else {
-			this->rootPosition = this->elements[this->rootPosition].right;
-			this->elements[this->elements[this->rootPosition].right].parent = NONEXISTENT_POSITION;
+			this->rootPosition = this->elements[rootCopy].right;
+			this->elements[this->elements[rootCopy].right].parent = NONEXISTENT_POSITION;
 		}
 	}
 
@@ -203,18 +204,6 @@ void SortedSet::resetEmpty(){
 	}
 	this->nextEmpty[this->arrayCapacity - 1] = NONEXISTENT_POSITION;
 	this->firstEmpty = 1;
-}
-
-void SortedSet::testempty(){
-	/*for (int i = 0; i < this->arrayCapacity; i++) {
-		std::cout << this->nextEmpty[i] << "\n";
-	}*/
-
-	int x = this->firstEmpty;
-	while (x != NONEXISTENT_POSITION) {
-		std::cout << x << "\n";
-		x = this->nextEmpty[x];
-	}
 }
 
 bool SortedSet::add(TComp elem) {

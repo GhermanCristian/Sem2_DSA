@@ -1,5 +1,6 @@
 #include "SortedSetIterator.h"
 #include <exception>
+#include <iostream>
 
 using namespace std;
 
@@ -9,6 +10,10 @@ SortedSetIterator::SortedSetIterator(const SortedSet& m) : multime(m){
 
 void SortedSetIterator::first() {
 	this->position = this->multime.rootPosition;
+
+	if (this->position == NONEXISTENT_POSITION) { // if the set is empty => no sense in having an iterator
+		this->position = this->multime.arrayCapacity; // makes the position invalid
+	}
 
 	// we go to the left as much as we can, in order to find the minimum value
 	while (this->position < this->multime.arrayCapacity and this->multime.elements[this->position].left != NONEXISTENT_POSITION) {
@@ -37,6 +42,7 @@ void SortedSetIterator::next() {
 
 		else {
 			int auxPosition = this->multime.elements[this->position].parent;
+
 			while (auxPosition >= 0 and this->multime.relation(this->multime.elements[auxPosition].info, this->multime.elements[this->position].info) == true) {
 				if (auxPosition == 0) { // it's the 'maximum' element
 					this->position = this->multime.arrayCapacity; // make the position invalid

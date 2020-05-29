@@ -42,7 +42,6 @@ void testIteratorSteps(SortedSet& sset, Relation r) {
 		si.next();
 	}
 	assert(count == sset.size());
-
 }
 
 void testCreate(Relation r) {
@@ -307,7 +306,6 @@ void testQuantity(Relation r) {
 	assert(s.size() == 0);
 }
 
-
 void testAllExtended() {
 	testCreate(rLessEqual);
 	testAdd();
@@ -318,4 +316,3 @@ void testAllExtended() {
 	testQuantity(rLessEqual);
 	testQuantity(rGreater);
 }
-
