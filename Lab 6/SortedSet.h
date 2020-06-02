@@ -9,7 +9,6 @@ typedef bool(*Relation)(TComp, TComp);
 class SortedSetIterator;
 
 const int INITIAL_CAPACITY = 127; // 7 levels
-//const int INITIAL_CAPACITY = 8191; // 7 levels
 const int NONEXISTENT_POSITION = -1;
 
 struct Node {
@@ -37,7 +36,7 @@ class SortedSet {
 			Finds the position of a given element in the bstree
 			Complexity:
 				- BC: theta(1), when the element is the root of the bstree
-				- AC: theta(n)
+				- AC: theta(n) (n = current array capacity)
 				- WC: theta(n), when the element is a leaf of the bstree
 			Input:
 				- The element we search for
@@ -65,7 +64,7 @@ class SortedSet {
 		/*
 			Resizes the current arrays
 			Complexity:
-				- BC/AC/WC: theta(n)
+				- BC/AC/WC: theta(n) (n = current array capacity)
 			Input:
 				- The old arrays and their capacities are already known
 			Output:
@@ -91,7 +90,9 @@ class SortedSet {
 			(I've put both specifications here because they are very similar)
 			Finds the position of the maximum/ minimum element in a subtree given by its root
 			Complexity:
-				- BC/AC/WC: theta(n)
+				- BC: theta(1), when the maximum/minimum element is at the root
+				- AC: theta(n) (n = current array capacity)
+				- WC: theta(n) (n = current array capacity) when all the elements are in a 'chain'
 			Input:
 				- The position of the root of the subtree we search through
 			Output:
@@ -140,7 +141,7 @@ class SortedSet {
 		/*
 			Removes a node with two successors
 			Complexity:
-				- BC/AC/WC: theta(n)
+				- BC/AC/WC: theta(n) (n = current array capacity)
 			Input:
 				- The position of the node we want to remove
 			Output:
@@ -202,7 +203,7 @@ class SortedSet {
 			Removes an element from the set
 			Complexity:
 				- BC: theta(1), when the node has 0 or 1 children
-				- AC: theta(n)
+				- AC: theta(n) (n = current array capacity)
 				- WC: theta(n), when the node has 2 children
 			Input:
 				- The element we want to remove
@@ -216,7 +217,7 @@ class SortedSet {
 			Searches for an element in the set
 			Complexity:
 				- BC: theta(1), when the element is the root of the bstree
-				- AC: theta(n)
+				- AC: theta(n) (n = current array capacity)
 				- WC: theta(n), when the element is a leaf of the bstree
 			Input:
 				- The element we search for
@@ -244,6 +245,18 @@ class SortedSet {
 			Output:
 				- Returns true if the set is empty
 				- Returns false, otherwise
+		*/
+
+		int getRange() const;
+		/*
+			Computes the difference between the maximum and minimum elements (assume integer values)
+			Complexity:
+				- BC/AC/WC: theta(n)
+			Input:
+				- None
+			Output:
+				- Returns the difference, if the set is non-empty
+				- Returns -1, otherwise
 		*/
 
 		SortedSetIterator iterator() const;
@@ -287,5 +300,4 @@ class SortedSet {
 			Output:
 				- Deallocates the memory and destroys the current set
 		*/
-
 };

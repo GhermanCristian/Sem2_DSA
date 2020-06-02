@@ -46,7 +46,6 @@ void SortedSetIterator::next() {
 				if (auxPosition == 0) { // it's the 'maximum' element
 					this->position = this->multime.arrayCapacity; // make the position invalid
 					return;
-					//throw std::exception("Invalid iterator position");
 				}
 				auxPosition = this->multime.elements[auxPosition].parent;
 			}

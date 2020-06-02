@@ -26,7 +26,9 @@ class SortedSetIterator{
 		/*
 			Sets the iterator on the first position, or makes it invalid if the set is empty
 			Complexity:
-				- BC/AC/WC: theta(n) (n = current array capacity)
+				- BC: theta(1), if the minimum element is at the root
+				- AC: theta(n)
+				- WC: theta(n) (n = current array capacity)
 			Input:
 				- None
 		*/

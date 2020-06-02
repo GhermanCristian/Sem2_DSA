@@ -12,7 +12,7 @@ SortedSet::SortedSet(Relation r) {
 	}
 	this->elementCount = 0;
 	this->relation = r;
-	this->rootPosition = 0;
+	this->rootPosition = NONEXISTENT_POSITION;
 
 	// the root will be placed on position 0 => the first empty position is 1
 	this->firstEmpty = 1;
@@ -313,6 +313,16 @@ int SortedSet::size() const {
 
 bool SortedSet::isEmpty() const {
 	return this->elementCount == 0;
+}
+
+int SortedSet::getRange() const{
+	if (this->rootPosition == NONEXISTENT_POSITION) { // the set is empty
+		return -1;
+	}
+
+	int positionOfMaximum = this->getPositionOfMaximum(this->rootPosition);
+	int positionOfMinimum = this->getPositionOfMinimum(this->rootPosition);
+	return this->elements[positionOfMaximum].info - this->elements[positionOfMinimum].info;
 }
 
 SortedSetIterator SortedSet::iterator() const {

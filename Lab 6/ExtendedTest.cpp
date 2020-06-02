@@ -306,6 +306,28 @@ void testQuantity(Relation r) {
 	assert(s.size() == 0);
 }
 
+void testGetRange() {
+	cout << "Test get range" << endl;
+
+	SortedSet s1(rLessEqual);
+	assert(s1.getRange() == -1);
+
+	for (int i = -100; i < 100; i++) {
+		s1.add(i);
+	}
+	assert(s1.getRange() == 199);
+
+	s1.remove(-100);
+	s1.remove(-99);
+	s1.remove(-98); // now the min element is -97
+	assert(s1.getRange() == 196);
+
+	s1.add(1000);
+	assert(s1.getRange() == 1097);
+	s1.add(-1000);
+	assert(s1.getRange() == 2000);
+}
+
 void testAllExtended() {
 	testCreate(rLessEqual);
 	testAdd();
@@ -315,4 +337,5 @@ void testAllExtended() {
 	testIterator(rGreater);
 	testQuantity(rLessEqual);
 	testQuantity(rGreater);
+	testGetRange();
 }
